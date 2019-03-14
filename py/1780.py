@@ -10,7 +10,7 @@ res=[0, 0, 0]
 
 def dnq(n, r, c):
     if n==1:
-        res[a[r][c]]+=1
+        res[a[r][c]+1]+=1
 
     else:
         num=a[r][c]
