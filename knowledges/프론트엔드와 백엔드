@@ -1,0 +1,21 @@
+웹 개발에서 나오는 용어.
+
+-font end(프론트엔드)
+사이트 이용자의 눈에 보이는 부분(HTML/CSS/Java script등)을 개발
+-back end(백엔드)
+사이트 이용자의 눈에 보이지 않는 부분(서버코딩, 서버상에서 DB활용, API제작 등)을 개발
+*full stack
+프론트엔드와 백엔드를 모두 하는 사람
+
+Front end 파트 구성
+-ux designer: 사용자에게 편리한 경험을 제공하기 위해 사이트의 구성/기능 구상
+-web designer: 홈페이지 디자인
+-front end developer: 디자인 된 것을 구현
+
+Back end 파트 구성
+-서버 관리자: 서버 환경설정, 서버 구성 관리
+-DB 관리자: DB 설계, DATA 관리/최적화
+-back end developer: 서버 코딩
+
+*출처*
+https://bit.ly/2FrLqMC
