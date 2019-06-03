@@ -1,0 +1,60 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+
+using namespace std;
+
+//19.06.03
+//오랜만에 구조체도 만들어보고, 구조체를 정렬하는 방법도 알게됐다.
+
+struct Player {
+	int num;
+	int power;
+	int ring;
+	int win;
+};
+
+//이런 식으로 sort를 내가 원하는 형식으로 정렬되도록 할 수 있다.
+//이 함수를 sort 함수의 세 번째 인자에 넣는다.
+//"a가 b앞에 올 조건은, a의 win이 b의 win보다 클 때이다." 라는 의미
+bool cmp(Player a, Player b)
+{
+	//많이 이긴 사람이 앞에 오도록 줄을 세우기.
+	return a.win > b.win;
+}
+
+int main()
+{
+	int n;
+	cin >> n;
+	vector<Player> player(n);
+
+	int p, r;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> p >> r;
+		player[i].power = p;
+		player[i].ring = r;
+		player[i].num = i + 1;
+	}
+
+	for (int i = 0; i < n-1; i++)
+	{
+		for (int j = i + 1; j < n; j++)
+		{
+			if (player[i].power + player[i].ring*player[j].power > player[j].power + player[j].ring*player[i].power)
+				player[i].win++;
+			else
+				player[j].win++;
+		}
+	}
+
+	sort(player.begin(), player.end(), cmp);
+
+	for (int i = 0; i < n; i++)
+		cout << player[i].num << endl;
+
+	return 0;
+}
