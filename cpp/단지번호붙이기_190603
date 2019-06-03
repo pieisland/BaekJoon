@@ -1,0 +1,91 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+
+using namespace std;
+
+/*
+19.06.03. BFS
+배열 관련해서 dfs, bfs 문제는 비슷한 듯.
+이차원 dif 배열이 아주 유용하게 쓰인다.
+기초가 그래도 쌓이고 있다!
+
+출력 상태 확인 안 하고, 문제 제대로 안 읽어서 두 번 틀렸음.
+제출 전 확인을 하기.
+*/
+
+int n;
+int cnt;
+int answer;
+int check[25][25];
+int map[25][25];
+int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+
+bool isInside(int y, int x)
+{
+	if (y >= 0 && y < n&&x >= 0 && x < n)
+		return true;
+	else
+		return false;
+}
+
+//dfs는 재귀호출을 하지요..
+void dfs(int y, int x)
+{
+	check[y][x] = answer;
+	cnt++;
+	for (int i = 0; i < 4; i++)
+	{
+		int ny = y + dir[i][0];
+		int nx = x + dir[i][1];
+		//범위 내에 있고 아직 확인하지 않았으며 집이 있다면
+		if (isInside(ny, nx) && check[ny][nx] == 0 && map[ny][nx] == 1)
+		{
+			dfs(ny, nx);
+		}
+	}
+}
+
+int main()
+{	
+	cin >> n;
+
+	int a;
+	//맵 모양 만듦.
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			scanf("%1d", &a);
+			map[i][j] = a;
+		}
+	}
+
+	vector<int> ans;
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			//아직 확인하지 않았고 집이 있다면
+			if (check[i][j] == 0 && map[i][j] == 1)
+			{
+				answer++;
+				dfs(i, j);
+				ans.push_back(cnt);
+				cnt = 0;
+			}
+		}
+	}
+
+	cout << answer << endl;
+
+	//단지내 집의 수. 오름차순 정렬.
+	sort(ans.begin(), ans.end());
+	for (int i = 0; i < ans.size(); i++)
+		cout << ans[i] << endl;
+
+	return 0;
+}
