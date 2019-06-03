@@ -8,6 +8,7 @@ using namespace std;
 
 //19.06.03
 //오랜만에 구조체도 만들어보고, 구조체를 정렬하는 방법도 알게됐다.
+//sort 이해가 안돼서 https://namnamseo.tistory.com/entry/stdsort%EB%A5%BC-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EC%A0%95%EB%A0%AC 찾아봄.
 
 struct Player {
 	int num;
