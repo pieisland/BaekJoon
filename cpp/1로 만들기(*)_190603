@@ -1,0 +1,54 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+
+using namespace std;
+
+/*
+출처: https://blockdmask.tistory.com/254
+
+결국 점화식 제대로 못세워서 다른분 꺼 봄.. ㅠ.
+
+앞의 수에서 1을 더하면 되는 건 이해
+2와 3의 배수에는 지수 승만큼 더해두고,
+배수의 경우 그 값으로 처리하려고 했는데
+애초에 생각이 잘못됐었음.
+그리고 min을 따져야되는거네.. 
+*/
+
+int n;
+int p[1000001];
+
+void dp(int num)
+{
+	if (num == 1) p[1] = 0;
+
+	for (int i = 2; i <= n; i++)
+	{
+		p[i] = p[i - 1] + 1;
+		if (i % 2 == 0)
+		{
+			//p[i] = p[i / 2] + 1;
+			p[i] = min(p[i], p[i / 2] + 1);
+		}
+		if (i % 3 == 0)
+		{
+			//p[i] = p[i / 3] + 1;
+			p[i] = min(p[i], p[i / 3] + 1);
+		}
+		cout << i << " " << p[i]<<endl;
+	}
+	cout << p[n];
+
+}
+
+int main()
+{
+	cin >> n;
+
+	dp(n);
+
+	return 0;
+}
