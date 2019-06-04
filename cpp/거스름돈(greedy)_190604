@@ -1,0 +1,30 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int main() {
+	
+	int n;
+	cin >> n;
+	n = 1000 - n;
+	
+	int arr[6] = { 500, 100, 50, 10, 5, 1 };
+
+	int sum = 0;
+	for (int i = 0;i < 6;i++)
+	{
+		int temp;
+		//이건 몫이고
+		temp = n / arr[i];
+		//나머지고
+		n %= arr[i];
+		sum += temp;
+	}
+
+	cout << sum;
+
+	return 0;
+}
