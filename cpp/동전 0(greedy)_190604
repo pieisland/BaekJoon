@@ -1,0 +1,30 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+
+using namespace std;
+
+int main() {
+	int arr[10] = { 0, };
+	int n, m;
+	cin >> n >> m;
+
+	for (int i = 0; i < n; i++)
+		cin >> arr[i];
+
+	int sum = 0;
+	for (int i = n - 1; i >= 0; i--)
+	{
+		int temp;
+		//이건 몫이고
+		temp = m / arr[i];
+		//나머지고
+		m %= arr[i];
+		sum += temp;
+	}
+
+	cout << sum;
+
+	return 0;
+}
