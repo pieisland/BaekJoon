@@ -1,0 +1,43 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+
+using namespace std;
+
+/*
+19.06.04.화.
+*/
+
+int main() {
+	
+	int n, m, k;
+	cin >> n >> m >> k;
+  
+  //현재 최대의 팀 수를 구함.
+	int a = n / 2;
+	int b = m;
+	int t;
+	if (a > b)
+		t = b;
+	else
+		t = a;
+
+	while (1)
+	{
+    //팀 수를 뺀 나머지 값의 합이 필요로 하는 인턴 수보다 작으면 팀을 줄임.
+		int a_ = n - 2 * t;
+		int b_ = m - t;
+		if (a_ + b_ < k)
+			t--;
+		else
+		{
+			cout << t;
+			break;
+		}
+	}
+
+ 	return 0;
+}
