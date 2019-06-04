@@ -1,0 +1,71 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<stack>
+
+using namespace std;
+
+int root[100][100];
+int visited[100][100];
+int n;
+
+/*
+19.06.04.
+dfs 비슷한 것만 하다가 조금 다른 거 나오니까 환장.
+기준점을 그대로 가지면서 dfs를 하는 방법은 이렇다.
+dfs는 중요한 건, 방문했는지를 체크한다는 점.
+*/
+
+void dfs(int node, int x)
+{
+  //얘는 기준점이 그대로 있고 움직이는 부분에서 어려웠음..
+  //나와 연결 돼있다고 하는 애들에 방문처리
+	visited[node][x] = 1;
+	root[node][x] = 1;
+
+	for (int i = 0; i < n; i++)
+	{
+    //연결 돼있다고 하는 점에 대해 연결 돼있는 부분을 찾아 기준점과 연결.
+    //단 그 점과 만난 적 없어야 함.
+		if (root[x][i] == 1 && visited[node][i] == 0)
+			dfs(node, i);
+	}
+}
+
+int main(){
+
+	cin >> n;
+
+	int a;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cin >> root[i][j];
+		}
+	}
+
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			if (root[i][j] == 1)
+				dfs(i, j);
+		}
+	}
+
+	//출력
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < n; j++)
+		{
+			cout << root[i][j]<<" ";
+		}
+		cout << endl;
+	}
+
+	return 0;
+}
