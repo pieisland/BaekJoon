@@ -1,0 +1,57 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+
+/*
+출처: https://kwanghyuk.tistory.com/4
+19.06.05. dp왜이렇게 어려움.
+점화식을 세워야되는데,
+어디를 기준으로 잡아서 점화식을 세워야 되는지를
+생각해야 될 것 같다.
+이 문제의 경우 마지막 계단을 기준으로 잡아
+어떤 경우의 수가 있는지를 파악하고
+점화식을 세움.
+
+위의 출처에서 설명해준 글.
+dp: 문제를 풀기 위해 문제를 여러 개의 하위 문제로 나누어 푼 후
+그것을 결합해 최종 목적에 도달.
+하위 문제의 해결을 계산한 뒤 해결책을 저장해
+후에 같은 하위 문제가 나왔을 경우 간단히 해결.
+계산 횟수를 줄일 수 있다.
+최단 경로 문제, 행렬의 제곱 문제 등의 최적화에 사용됨.
+문제를 해결하기 위해 모든 방법을 검토하고 그 중 최적의 풀이를 찾아냄.
+
+동적 계획법이 주먹구구식 방법이라는 단점이 있어
+그리디 알고리즘이 등장.
+항상 최적해를 구해주지는 않지만 MST등의 문제에서
+최적해를 구할 수 있음이 입증됐음.
+*/
+
+using namespace std;
+
+int n;
+int stair[301];
+int dp[301];
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> stair[i];
+	}
+
+	dp[0] = stair[0];
+	dp[1] = max(stair[0] + stair[1], stair[1]);
+	dp[2] = max(stair[0] + stair[2], stair[1] + stair[2]);
+
+	for (int i = 2; i < n; i++)
+		dp[i] = max(dp[i - 2] + stair[i], stair[i - 1] + stair[i] + dp[i - 3]);
+
+	cout << dp[n - 1];
+
+	return 0;
+}
