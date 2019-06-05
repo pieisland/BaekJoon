@@ -1,0 +1,60 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+using namespace std;
+
+/*
+19.06.05.수.
+2차원 배열로 정렬하니까 정렬이 하나 기준으로 되는 게 아니라 다 되더라;;
+방법 찾으려고 했는데 잘 안되길래 그냥 vector로 변경.
+벡터의 초기화는 저렿게 하는건가보다. 신기함.. 처음 알았다.
+
+이 문제에서 계속 틀렸던 부분은, 비교하는 값을 갱신해야한다는 점과 1등인 사람은 당연히 포함시키는 것.
+*/
+
+/*bool cmp(int arr[], int arr2[])
+{
+	return arr[0] < arr2[0];
+}*/
+
+int main()
+{	
+	int n;
+	cin >> n;
+
+	while (n--)
+	{
+		int m;
+		cin >> m;
+
+		int ans = 0;
+		vector<vector<int> > arr(m, vector<int>(2, 0));
+		//int arr[100000][2] = { 0, };
+		int a, b;
+		for (int i = 0; i < m; i++)
+		{
+			cin >> a >> b;
+			arr[i][0] = a;
+			arr[i][1] = b;
+		}
+
+		sort(arr.begin(), arr.end());
+		int rank = arr[0][1];
+
+		//탈락된 사람은 제외하고 갱신해서 해줘야 함...
+		for (int i = 1; i < m; i++)
+		{
+			if (arr[i][1] < rank)
+			{
+				rank = arr[i][1];
+				ans++;
+			}	
+		}
+		cout << ans+1 << endl;
+	}
+
+	return 0;
+}
