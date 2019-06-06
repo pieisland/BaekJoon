@@ -1,2 +1,5 @@
+크기 2인 벡터 veca를 생성하고 10로 초기화한다.
+vector<int> veca(2, 10);
+
 크기 3*30인 벡터 vecb를 생성하고 1로 초기화한다.
 vector<vector<int>> vecb(3, vector<int> (30, 1));
