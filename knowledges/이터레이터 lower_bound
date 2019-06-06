@@ -1,0 +1,11 @@
+#include<algorithm>
+
+//자동적으로 num보다 작거나 같은 수 중 가장 큰 수를 찾아준다.
+//(upper bound는 num보다 크거나 같은 수 중 가장 작은 수를 찾아주겠지.)
+//그 주소 값을 it에 저장.
+auto it = lower_bound(arr.begin(), arr.end(), num);
+
+//it 주소의 값에 수를 넣어주면 된다.
+*it = num;
+
+//LIS 문제(반도체 설계) 에서 나왔던 개념.
