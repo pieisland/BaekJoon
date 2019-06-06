@@ -10,6 +10,8 @@ using namespace std;
 19.06.06.목.
 LIS(Longest Increasing Subsequence)를 이용하는 문제라고 한다.
 개념은 https://jason9319.tistory.com/113 에 잘 설명이 되어있다.
+(https://fullalgorithmpanic.blogspot.com/2016/05/boj-2352-lis-lowerbound-upperbound.html
+ 이 사람은 처음 배우는 것 같은데 자신이 이해한 내용을 조곤조곤 잘 정리해둬서 읽기 편했음.)
 시간 복잡도가 O(N*N)이 되는 방법, O(NlogN)이 되는 방법이 있다고.
 배열에 들어간 값이 실제로 구해진 게 아니다. 그게 좀 헷갈렸다.
 왜이렇게 모르는 게 많지.. ^?^ 
