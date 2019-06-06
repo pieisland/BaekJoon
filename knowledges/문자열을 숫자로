@@ -1,0 +1,8 @@
+-atoi(char *): 문자열을 숫자로 변환해줌.
+string이라면, str.c_str()을 한 후 atoi함수 활용.
+string str='34';
+int num = atoi(str.c_str());
+
+-to_string(int): 숫자를 문자열로 변환해줌.
+int num = 34;
+string str = to_string(num);
