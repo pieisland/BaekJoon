@@ -1,0 +1,53 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+using namespace std;
+
+/*
+19.06.06.목.
+LIS(Longest Increasing Subsequence)를 이용하는 문제라고 한다.
+개념은 https://jason9319.tistory.com/113 에 잘 설명이 되어있다.
+시간 복잡도가 O(N*N)이 되는 방법, O(NlogN)이 되는 방법이 있다고.
+배열에 들어간 값이 실제로 구해진 게 아니다. 그게 좀 헷갈렸다.
+왜이렇게 모르는 게 많지.. ^?^ 
+*/
+
+int main()
+{
+	int n;
+	cin >> n;
+
+	vector<int> num;
+
+	int m;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> m;
+		num.push_back(m);
+	}
+
+	vector<int> ans;
+	ans.push_back(num[0]);
+
+	int idx = 0;
+	for (int i = 1; i < n; i++)
+	{
+		if (ans[idx] < num[i])
+		{
+			ans.push_back(num[i]);
+			idx++;
+		}
+		else
+		{
+			auto it = lower_bound(ans.begin(), ans.end(), num[i]);
+			*it = num[i];
+		}
+	}
+
+	cout << ans.size() << endl;
+
+	return 0;
+}
