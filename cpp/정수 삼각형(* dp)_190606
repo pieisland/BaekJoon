@@ -48,11 +48,11 @@ int main()
 	{
 		for (int j = 0; j <= i; j++)
 		{
-			if (j == 0)
+			if (j == 0)//맨 왼쪽이라면 오른쪽 위의 값만 고려
 				dp[i][j] = dp[i - 1][j] + arr[i][j];
-			else if (j == i)
+			else if (j == i)//맨 오른쪽이라면 왼쪽 위의 값만 고려
 				dp[i][j] = dp[i - 1][j - 1] + arr[i][j];
-			else
+			else//나머지들, 중간에 있는 경우 왼쪽 위, 오른쪽 위 값과 현재 값의 합 중 최대값을 저
 				dp[i][j] = max(dp[i - 1][j] + arr[i][j], dp[i - 1][j - 1] + arr[i][j]);
 		}
 	}
