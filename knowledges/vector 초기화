@@ -1,0 +1,2 @@
+크기 3*30인 벡터 vecb를 생성하고 1로 초기화한다.
+vector<vector<int>> vecb(3, vector<int> (30, 1));
