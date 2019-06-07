@@ -1,0 +1,96 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.07.금.
+사전순으로 하기 위해서 애초에 갯수를 세는 배열을
+그렇게 만듦.(ACGT)
+*/
+
+int n, m;
+int acgt[4] = { 0 };
+string dna[1000];
+vector<char> ans;
+
+//다시 가장 많이 나온 문자를 세기 위해 초기화.
+void init()
+{
+	for (int i = 0; i < 4; i++)
+		acgt[i] = 0;
+}
+
+//해밍 디스턴스를 구함.
+void ham()
+{
+	int answer = 0;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+      //만약, 정답과 다른 문자라면 1 증가.
+			if (dna[i][j] != ans[j])
+				answer++;
+		}
+	}
+	cout << answer;
+}
+
+int main(){
+
+	cin >> n >> m;
+
+	for (int i = 0; i < n; i++)
+		cin >> dna[i];
+
+	for (int i = 0; i < m; i++)//글자의 길이수
+	{
+		init();
+		for (int j = 0; j < n; j++)//전체 몇 개
+		{
+			if (dna[j][i] == 'A')
+				acgt[0]++;
+			else if (dna[j][i] == 'C')
+				acgt[1]++;
+			else if (dna[j][i] == 'G')
+				acgt[2]++;
+			else
+				acgt[3]++;
+		}
+
+		//제일 큰 수를 찾는다.
+		int idx = 0;
+		int max = -1;
+		for (int k = 0; k < 4; k++)
+		{
+			if (acgt[k] > max)
+			{
+				max = acgt[k];
+				idx = k;
+			}
+		}
+    
+    //제일 큰 수에 해당되는 idx 값에 따라 문자를 넣음.
+		if (idx == 0)
+			ans.push_back('A');
+		else if (idx == 1)
+			ans.push_back('C');
+		else if (idx == 2)
+			ans.push_back('G');
+		else
+			ans.push_back('T');
+	}
+
+	for (int i = 0; i < m; i++)
+		cout << ans[i];
+	cout << endl;
+
+	ham();
+	
+	return 0;
+}
