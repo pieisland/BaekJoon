@@ -1,0 +1,6 @@
+//pair를 이용한다.
+queue<pair<int, int>> que;
+
+//꺼낼 때는 이렇게 꺼낼 수 있다.
+que.front().first;
+que.front().second;
