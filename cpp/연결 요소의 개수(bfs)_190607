@@ -1,0 +1,79 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.07.목.
+무방향 그래프에서는 서로를 연결해주는 게 중요하다.. ㅠ.ㅠ
+그리고 vector 쌍이 필요한데, 그 쌍이 몇개인지는 아는 경우는
+vector<int> arr[n];해서 만들 수 있다는 것을 기억하자.
+
+*/
+
+int n, m;
+vector<vector<int>> vec;
+vector<int> arr[1001];
+int c[1001];
+int answer = 0;
+
+void bfs(int a)
+{
+	/*if (arr[a].size() == 0)
+	{
+		//cout << a << "사이즈가 0이라니??" << endl;
+		answer--;
+		return;
+	}*/
+	
+	queue <int> q;
+	q.push(a);
+	c[a] = true;
+
+	while (!q.empty())
+	{
+		int k = q.front();
+		q.pop();
+
+		for (int i = 0; i < arr[k].size(); i++)
+		{
+			int y = arr[k][i];
+			if (!c[y])
+			{
+				q.push(y);
+				c[y] = true;
+			}
+		}
+	}
+}
+
+int main()
+{
+	cin >> n >> m;
+
+	int u, v;
+	for (int i = 0; i < m; i++)
+	{
+		cin >> u >> v;
+		arr[u].push_back(v);
+		arr[v].push_back(u);
+	}
+	
+	//int answer = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		if (c[i] == 0){//방문 안했으면
+			//cout << i << "방문 안함" << endl;
+			bfs(i);
+			answer++;
+		}
+	}
+
+	cout << answer;
+
+	return 0;
+}
