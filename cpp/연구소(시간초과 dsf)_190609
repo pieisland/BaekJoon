@@ -1,0 +1,176 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+int n, m;
+int arr[8][8];
+int temp[8][8];
+int c[8][8];
+int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+int ans;
+int smax;
+vector<pair<int, int>> zero;
+
+//temp 행렬에 벽을 세우기 위해 arr행렬으로 초기화.
+//체크 값도 변경.
+void makeArr()
+{
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++) {
+			temp[i][j] = arr[i][j];
+			c[i][j] = 0;
+		}
+}
+
+bool isInside(int y, int x)
+{
+	if (y >= 0 && y < n&&x >= 0 && x < n)
+		return 1;
+	else
+		return 0;
+}
+
+void bfs(int a, int b)
+{
+	queue <pair<int, int>> q;
+	q.push(pair<int, int>(a, b));
+
+	//char color = arr[a][b];
+	//ans++;
+
+	while (!q.empty())
+	{
+		int cy = q.front().first;
+		int cx = q.front().second;
+		q.pop();
+		c[cy][cx] = 1;
+		temp[cy][cx] = 2;
+
+		for (int i = 0; i < 4; i++)
+		{
+			int ny = cy + dir[i][0];
+			int nx = cx + dir[i][1];
+			//안에 있고, 방문하지 않았으며, 0인 곳이라면
+			if (isInside(ny, nx) && c[ny][nx] == 0 && temp[ny][nx] == 0)
+			{
+				c[ny][nx] = 1;
+				q.push(pair<int, int>(ny, nx));
+			}
+		}
+	}
+}
+
+int main(){
+
+	cin >> n >> m;
+	int num;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			cin >> num;
+			arr[i][j] = num;
+			if (num == 0)
+				zero.push_back(pair<int, int>(i, j));
+		}
+	}
+
+	//벽 세우기.
+	int y, x;
+	int s = 0;
+	pair<int,int> wall[10000][3];
+	//cout << zero.size() << endl;
+	for(int i=2;i<zero.size();i++)
+		for(int j=1;j<i;j++)
+			for (int k = 0; k < j; k++)
+			{
+				wall[s][0]=zero[i];
+				wall[s][1]=zero[j];
+				wall[s][2]=zero[k];
+
+				s++;
+
+				/*makeArr();
+				y = zero[i].first;
+				x = zero[i].second;
+				temp[y][x] = 1;
+
+				y = zero[j].first;
+				x = zero[j].second;
+				temp[y][x] = 1;
+
+				y = zero[k].first;
+				x = zero[k].second;
+				temp[y][x] = 1;
+
+				//이제 벽을 세운 애가 만들어졌다.
+				int safe = 0;
+				for(int a=0;a<n;a++)
+					for (int b = 0; b < m; b++)
+					{
+						//방문 안했고 바이러스의 위치라면
+						if (c[a][b] == 0 && temp[a][b] == 2)
+							bfs(a, b);
+					}
+
+				for (int i = 0; i < n; i++)
+					for (int j = 0; j < m; j++)
+						if (temp[i][j] == 0)
+							safe++;
+
+				if (safe > smax)
+					smax = safe;*/
+			
+			}
+
+	//cout << s << endl;
+	//cout << smax << endl;
+
+	/*pair<int, int> arrrr[100][3];
+	vector<pair<int, int>> aa;
+	aa.push_back(pair<int, int>(3, 3));
+	vector<pair<int, int>> ad[10];
+	arrrr[1][1] = aa[1];
+	arrrr[1][1].fir*/
+	
+	for (int i = 0; i < s; i++)
+	{
+		makeArr();
+		y = wall[i][0].first;
+		x = wall[i][0].second;
+		temp[y][x] = 1;
+
+		y = wall[i][1].first;
+		x = wall[i][1].second;
+		temp[y][x] = 1;
+
+		y = wall[i][2].first;
+		x = wall[i][2].second;
+		temp[y][x] = 1;
+
+		int safe = 0;
+		for (int a = 0; a<n; a++)
+			for (int b = 0; b < m; b++)
+			{
+				//방문 안했고 바이러스의 위치라면
+				if (c[a][b] == 0 && temp[a][b] == 2)
+					bfs(a, b);
+			}
+
+		for (int i = 0; i < n; i++)
+			for (int j = 0; j < m; j++)
+				if (temp[i][j] == 0)
+					safe++;
+
+		if (safe > smax)
+			smax = safe;
+	}
+	cout <<smax << endl;
+	return 0;
+
+}
