@@ -1,0 +1,81 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+int check[14] = { 0 };
+int n;
+vector<int> nums;
+
+/*
+19.06.09.일.
+시작 수를 옮기기.
+*/
+
+void checkClear()
+{
+	for (int i = 0; i < 15; i++)
+		check[i] = 0;
+}
+
+void func(int start, int a)
+{
+	if (a == 6)
+	{
+		for (int i = 0; i < n; i++)
+			if (check[i] == 1)
+				cout << nums[i] << " ";
+		cout << endl;
+		return;
+	}
+	else
+	{
+		for (int i = start; i < n; i++)
+		{
+			if (check[i] == 0)
+			{
+				check[i] = 1;
+				func(i, a + 1);
+				check[i] = 0;
+			}
+		}
+	}
+}
+
+int main()
+{
+	while (1) 
+	{
+		int num;
+		nums.clear();
+		checkClear();
+
+		cin >> n;
+		if (n == 0)
+			break;
+
+		//n개의 수를 받음
+		for (int i = 0; i < n; i++) {
+			cin >> num;
+			nums.push_back(num);			
+		}
+
+		//n개의 수에 대해 
+		for (int i = 0; i < n; i++)
+		{
+			//if (check[i] == 0)
+			{
+				//얘를 맨 처음 수로 해서 6개의 수를 골라본다.
+				check[i] = 1;
+				func(i, 1);
+				//다 끝난 애는 0으로.
+				check[i] = 0;
+			}
+		}
+		cout << endl;
+	}
+	return 0;
+}
