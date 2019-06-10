@@ -1,0 +1,115 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.10.월.
+답은 나오는데 시간초과라하네.
+*/
+
+int arr[10] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+int c[10];
+
+int n;
+int cnt = 0;
+vector<int> temp;
+
+vector<string> s;
+char k[9];
+
+void cor(string ss)
+{
+	for (int i = 0; i < n; i++)
+	{
+		if (k[i] == '>')
+		{
+			if (ss[i] - '0' > ss[i + 1] - '0')
+				continue;
+			else
+				return;//볼 것도 없다.
+		}
+		else
+		{
+			if (ss[i] - '0' < ss[i + 1] - '0')
+				continue;
+			else
+				return;
+		}
+	}
+
+	//모두 만족한다면
+	s.push_back(ss);
+}
+
+void func(int start, int num)
+{
+	if (num == n+1)
+	{
+		string ss="";
+		cnt++;
+		/*for (int i = 0; i < 5; i++)
+			if (c[i] == 1)
+				cout << arr[i] << " ";
+				*/
+		
+		for (int i = 0; i < temp.size(); i++) {
+			//cout << temp[i];
+			ss += to_string(temp[i]);
+		}
+
+		cor(ss);
+		//s.push_back(ss);
+
+		//cout << endl;
+		return;
+	}
+
+	else {
+		for (int i =0; i < 10; i++)
+		{
+			if (c[i] == 0)
+			{
+				c[i] = 1;
+				temp.push_back(arr[i]);
+				func(i, num + 1);
+				c[i] = 0;
+				temp.pop_back();
+			}
+		}
+	}
+}
+
+int main()
+{
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> k[i];
+	}
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (c[i] == 0) {
+			c[i] = 1;
+			temp.push_back(arr[i]);
+			func(i, 1);
+			c[i] = 0;
+			temp.pop_back();
+		}
+	}
+
+	//for (int i = 0; i < s.size(); i++)
+	//	cout << s[i] << endl;
+
+	cout << s[s.size() - 1] << endl;
+	cout << s[0] << endl;
+
+	//cout << cnt;
+
+	return 0;
+}
