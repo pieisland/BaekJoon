@@ -1,0 +1,76 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.11.화.
+백트래킹의 핵심은 배제와 풀이시간의 단축이다.
+답을 구할 가능성이 없는 경로를 가지치기하여 불필요한 연산을 줄인다. 
+
+너어어어무 헷갈리는 체스판의 퀸 문제.
+일반적으로 사용하는 거와 달리..
+row[1]=i(1번째 row에 i번째 열에 퀸을 놓는다)
+이렇게 시작해서 굉장히 당황. 자유자재로 갖고 놀 줄 알아야 된다는 생각이 들었다..
+*/
+
+int row[5];
+int ans;
+
+//받아온 r은 r번쨰 row를 의미.
+//row[r]값은 r번째 row의 어느 위치에 퀸을 놓았는지를 의미.
+bool isPossible(int r)
+{
+	for (int i = 1; i < r; i++)
+	{
+		//i번쨰 row에 놓인 퀸의 위치와 r번째 row에 놓인 퀸의 위치가 동일한 경우
+		if (row[i] == row[r])
+			return false;
+
+		//가로와 세로 길이가 같으면 대각선 상에 위치한 것.
+		if (abs(row[i] - row[r]) == abs(i - r))
+			return false;
+	}
+	return true;
+}
+
+void dfs(int r)
+{
+	//4개의 행에 모두 퀸을 놓은 상태
+	if (r == 5)
+		ans++;
+	else
+	{
+		//4개의 열에 대해
+		for (int i = 1; i < 5; i++)
+		{
+			//r번째 row의 i열에 퀸을 놓았을 때
+			row[r] = i;
+			//가능 하다면
+			if (isPossible(r))
+			{
+				//다음 행으로 넘어간다.
+				dfs(r + 1);
+			}
+			else//그렇지 않다면 r번째 row의 i 열에 퀸을 놓을 수 없다. 근데 이게 굳이 필요함??
+				row[r] = 0;
+		}
+	}
+}
+
+int main()
+{
+	for (int i = 1; i < 5; i++)
+	{
+		row[1] = i;
+		dfs(2);
+	}
+
+	cout << ans << endl;
+
+	return 0;
+}
