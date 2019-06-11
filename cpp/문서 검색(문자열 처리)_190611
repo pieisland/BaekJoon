@@ -1,0 +1,111 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+string all;
+string part;
+
+int main(void)
+{
+	//공백을 포함한 문자열을 받으려면, getline을 사용해야한다.
+	getline(cin, all);
+	getline(cin, part);
+
+	int size1 = all.length();
+	int size2 = part.length();
+	vector<int> pos;
+	vector<int> ans;
+
+	if (size1 < size2) {
+		cout << 0 << endl;
+		return 0;
+	}
+
+	for (int i = 0; i <= size1 - size2; i++) {
+		int num = 0;
+		for (int j = 0; j < size2; j++)
+		{
+			if (all[i +j] != part[j])
+			{
+				num = 1;
+				break;
+			}
+		}
+		if (num == 0)
+			pos.push_back(i);
+	}
+
+	//for (int i = 0; i < pos.size(); i++)
+	//	cout << pos[i] << " ";
+	//cout << endl;
+
+	for (int k = 0; k < pos.size(); k++)
+	{
+		int cnt = 0;
+		int i = pos[k];
+		while (i <= size1 - size2)
+		{
+			int num = 0;
+			for (int j = 0; j < size2; j++)
+			{
+				if (all[i + j] != part[j])
+				{
+					num = 1;
+					break;
+				}
+			}
+			if (num == 0)
+			{
+				i += size2;
+				cnt += 1;
+			}
+			else
+				i += 1;
+		}
+		ans.push_back(cnt);
+	}
+
+	/*
+	int i = 0;
+	int cnt = 0;
+	while (i <= size1 - size2)
+	{
+		int num = 0;
+		for (int j = 0; j < size2; j++)
+		{
+			if (all[i + j] != part[j])
+			{
+				num = 1;
+				break;
+			}
+		}
+		if (num == 0)
+		{
+			i += size2;
+			cnt += 1;
+		}
+		else
+		{
+			i += 1;
+		}
+	}*/
+
+	sort(ans.begin(), ans.end());
+	if (ans.size() == 0)
+	{
+		cout << 0 << endl;
+		return 0;
+	}
+	cout << ans[ans.size() - 1] << endl;
+	//for (int i = 0; i < ans.size(); i++)
+	//	cout << ans[i] << " ";
+
+	//cout << cnt << endl;
+		
+	return 0;
+}
