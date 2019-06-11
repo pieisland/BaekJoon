@@ -1,0 +1,57 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.11.화.
+출처는 꾸준한 이 분..: https://jaimemin.tistory.com/756
+진짜 블로그 제목대로 꾸준하신 듯.
+
+하. 문제는..
+그리디 문제 감이 잘 안잡힘..
+*/
+
+int N;
+vector<int> v;
+
+int main(void)
+{
+	cin >> N;
+	v.resize(N);
+
+	for (int i = 0; i < N; i++)
+		cin >> v[i];
+
+	sort(v.begin(), v.end());
+
+	//1이 없다면
+	if (v[0] != 1)
+		cout << 1 << endl;
+	else
+	{
+		int sum = 1; //v[0]
+		//현재까지의 합+1의 의미는 현재까지의 합의 다음 수.
+		//현재까지의 합까지는 앞의 수들로 구할 수 있다는 의미.
+		for (int i = 1; i < N; i++)
+		{
+			//다음 수보다 크다면, 다음 수를 만들 수 없다.
+			//같거나 작아야 다음 수를 만들 수 있음.
+			//작으면 앞의 수들과 쿵짝쿵짝이 되고, 같으면 그 수로 만들 수 있어서 그런 것 같다.
+			//ㅜ,ㅜ
+			if (v[i] > sum + 1)
+				break;
+
+			sum += v[i];
+			cout << sum << endl;
+		}
+
+		cout << sum + 1 << endl;
+	}
+
+	return 0;
+}
