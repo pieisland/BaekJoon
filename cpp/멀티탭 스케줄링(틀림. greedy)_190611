@@ -1,0 +1,84 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.11.
+여러 가지 테스트 케이스로 확인 해봐도 맞는데 왜 틀린건지 모르겠다.
+*/
+
+int n, k;
+int arr[101];
+int c[101];
+
+void popPlug(int idx)
+{
+	//뒤에 남은 애들에서 꽂혀 있는 애의 경우 얼마나
+	//증가해야되는지
+	for (int i = idx; i <= k; i++)
+	{
+		if (c[arr[i]] != 0)//이미 꽂혀 있다면
+		{
+			c[arr[i]]++;
+		}
+	}
+
+	int min = 1000; int pos;
+	for (int i = 1; i <= k; i++)
+	{
+		if (c[i] == 0)
+			continue;
+		//0이 아닌 애들 중 제일 적게 쓰이는 애 찾기
+		if (min > c[i])
+		{
+			min = c[i];
+			pos = i;
+		}
+		c[i] = 1;
+	}
+	//제일 적은 그 위치를 뺼 것임.
+	c[pos] = 0;
+}
+
+int main(void)
+{
+	int in = 0;
+	int ans = 0;
+	cin >> n >> k;
+	for (int i = 1; i <= k; i++)
+	{
+		cin >> arr[i];
+	}
+
+	for (int i = 1; i <= k; i++)
+	{
+		if (c[arr[i]] == 0)
+		{
+			if (in == n)
+			{
+				cout << i << "답 증가" << endl;
+				popPlug(i);
+				ans++;
+				in--;
+			}
+			c[arr[i]] = 1;
+
+			for (int i = 1; i <= k; i++)
+				cout << c[i] << " ";
+			cout << endl << endl;
+			in++;
+		}
+	}
+
+	//for (int i = 1; i <= k; i++)
+	//	cout << c[i] << " ";
+
+	cout << ans << endl;
+
+	return 0;
+}
