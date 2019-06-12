@@ -1,0 +1,49 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.12.수.
+사실 이 문제는.... LIS가 아닌가?
+저번에 한 것 같은데 왜 제출을 안 한걸까.
+*/
+
+int arr[1000];
+int dp[1000];
+
+int main(void)
+{
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> arr[i];
+	}
+
+	vector<int> ans;
+	for (int i = 0; i < n; i++)
+	{
+		//길이가 0이라면, 1로 해주자.
+		//내가 제일 작은 값이라고 해도 1이기 때문.
+		if (dp[i] == 0) dp[i] = 1;
+		for (int j = 0; j < i; j++)//j는 i의 앞 값.
+		{
+			if (arr[i] > arr[j])//앞 값이 현재 값보다 작으면
+			{ // 즉 내가 더 크다면
+				if (dp[i] < dp[j] + 1) //앞에 증가했다고 한 값+1 보다 내가 작으면
+					dp[i] = dp[j] + 1; // 내 값은 그것보다 크게.
+			}
+		}
+	}
+
+	//정렬을 해서 가장 큰 숫자가 뒤로 가게 한다.
+	sort(dp, dp + n);
+	cout << dp[n - 1] << endl;
+
+	return 0;
+}
