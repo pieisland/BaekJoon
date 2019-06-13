@@ -1,0 +1,40 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.13.목.
+출처는 : https://blog.naver.com/occidere/220792326120
+설명 너무 잘 해주셔서 바로 이해했다!
+
+그 수와 가장 가까운 제곱수로 만드는 게 최솟값이 아니라는 걸 알아야 한다.
+(이래서 내가 틀렸다..^.^)
+모든 제곱수로 만들 수 이쓴 값들 중에서
+가장 최소로 만들 수 있는 값+1이 답이 된다.
+*/
+
+int dp[100001];
+
+int main(){
+
+	int n;
+	cin >> n;
+	
+	//모두 1로 만들 때의 값으로 초기화.
+	for (int i = 0; i <= n; i++)
+		dp[i] = i;
+	
+	//2부터 구하면 된다. 1로 만든 경우는 위에서 했기떄문.
+	for (int i = 2; i <= n; i++)
+		for (int j = 2; j*j <= i; j++)
+			dp[i] = min(dp[i], dp[i - j * j] + 1);
+
+	cout << dp[n] << endl;
+
+	return 0;
+}
