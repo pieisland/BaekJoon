@@ -1,0 +1,50 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.13. 목
+다리 놓기 문제. 전형적인 dp문제.
+앞에 놓은 다리들 모양을 살펴보면 됨.
+초기화를 해줘야 이상한 값이 안나온다.
+*/
+
+int n, m;
+int dp[30][30];
+
+int main(void)
+{
+	int num;
+	cin >> num;
+	while (num--) {
+	
+		cin >> n >> m;
+
+		for (int i = 0; i <= m; i++)
+			dp[0][i] = 1;
+		for (int i = 1; i <= n; i++)
+		{
+			for (int j = i; j <= m; j++)
+			{
+				if (i == j) dp[i][j] = 1;
+				else {
+					for (int k = 1; k <= j - i + 1; k++)
+					{
+						dp[i][j] += dp[i - 1][j - k];
+					}
+				}
+			}
+		}
+
+		cout << dp[n][m] << endl;
+		memset(dp, 0, sizeof(dp));
+	}
+
+	
+	return 0;
+}
