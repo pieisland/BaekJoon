@@ -1,0 +1,48 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.13.목.
+가장 긴 증가하는 부분 수열과 형태는 비슷.
+다른 점은, 가장 큰 값을 찾아야 하기 때문에
+증가하는 값이더라도 그 값 중에서 가장 큰 것을 선택해야 된다는 점.
+*/
+int arr[1000];
+int dp[1000];//내가 마지막 증가 수일 때 값..?
+
+int main(){
+
+	int n;
+	cin >> n;
+
+	for (int i = 0; i < n; i++)
+	{
+		cin >> arr[i];		
+	}
+
+	dp[0] = arr[0];
+	for (int i = 1; i < n; i++) {
+		for (int j = 0; j < i; j++)
+		{
+			if (arr[i] > arr[j])//내가 더 크면
+			{
+				dp[i] = max(dp[i], dp[j]);
+			}
+		}
+		dp[i] += arr[i];
+	}
+
+	sort(dp, dp + n);
+	//for(int i=0;i<n;i++)
+	//	cout << dp[i] << endl;
+
+	cout << dp[n - 1] << endl;
+
+	return 0;
+}
