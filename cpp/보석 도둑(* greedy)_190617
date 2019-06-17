@@ -1,0 +1,57 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.17.월.
+
+우선순위 큐 사용. 맥스 힙 필요.
+출처; https://jaimemin.tistory.com/760
+
+가능한 애들에 대해 먼저 봐야 되어서 둘 다 정렬을 해야 하는 듯.
+무게 작은 순서대로 정렬을 한 뒤에 가능하 애들 중에서
+가격이 제일 비싼 애를 선택.
+
+우선순위 큐가 알아서 top에 제일 가격이 높은 것을 올려주기 때문에 편하게 가능.
+*/
+
+pair<int, int> gem[300000];
+int bag[300000];
+priority_queue <int> pq;
+
+int main(){
+	
+	int n, k;
+	cin >> n >> k;
+
+	for (int i = 0; i < n; i++)
+		cin >> gem[i].first >> gem[i].second;
+	for (int i = 0; i < k; i++)
+		cin >> bag[i];
+
+	sort(gem, gem + n);
+	sort(bag, bag + k);
+
+	int idx = 0;
+	long long int ans = 0;
+	for (int i = 0; i < k; i++)
+	{
+		while (idx < n&&gem[idx].first <= bag[i])
+			pq.push(gem[idx++].second);
+
+		if (!pq.empty())
+		{
+			ans += pq.top();
+			pq.pop();
+		}
+	}
+
+	cout << ans << endl;
+
+	return 0;
+}
