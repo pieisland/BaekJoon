@@ -1,0 +1,46 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.17.월.
+최장 공통 부분 수열.
+연속되지 않아도 된다.
+dp를 사용하는 문제인데, 좀.. 알면 맞고 모르면 틀리기 쉬운 문제이지 않나 싶다.
+
+출처는 : https://mygumi.tistory.com/126
+*/
+
+int LCS[1001][1001];
+
+int main(){
+
+	string a, b;
+
+	cin >> a;
+	cin >> b;
+
+	for (int i = 1; i <= a.length(); i++)
+	{
+		for (int j = 1; j <= b.length(); j++)
+		{
+			if (a[i - 1] == b[j - 1])
+			{
+				LCS[i][j] = LCS[i - 1][j - 1] + 1;
+			}
+			else
+			{
+				LCS[i][j] = max(LCS[i - 1][j], LCS[i][j - 1]);
+			}
+		}
+	}
+
+	cout << LCS[a.length()][b.length()] << endl;
+
+	return 0;
+}
