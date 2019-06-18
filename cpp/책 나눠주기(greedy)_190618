@@ -1,0 +1,77 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+2019.06.18.화.
+회의실 배정과 매우 흡사한 문제같다.
+여기서 익혀야 할 것은 pair를 정렬할 때
+정렬을 시키기 위한 조건을 만들 때 cmp처럼 한다는 것과
+(항상 매개변수에 뭐 써야되는지 어리둥절..)
+이 함수가 왜 저런 조건으로 쓰였는지를 알아야 한다는 것.
+*/
+
+int books[1001];
+pair<int, int> arr[1001];
+
+//이렇게 해야되는 이유는, 끝이 같은 경우에
+//더 앞의 책을 가져올 수 있도록 가능한 경우를 열어주고
+//끝이 다르다면 끝이 앞인 경우가 먼저 책을 가져야 끝이 더 뒤에 있는 게
+//뒤의 책을 가질 수 있기 때문.
+bool cmp(pair<int, int> a, pair<int, int> b)
+{
+	if (a.second != b.second)
+		return a.second < b.second;
+	else
+		return a.first < b.first;
+}
+
+int main(){
+
+	int t;//t는 몇 번 하는지.
+	cin >> t;
+	int n, m;//n은 책 수, m은 달라는 사람 수.
+	int a, b;
+	int answer;
+	while (t--)
+	{
+		answer = 0;
+		memset(arr, 0, sizeof(arr));
+		memset(books, 0, sizeof(books));
+		cin >> n >> m;
+		for(int i=1;i<=m;i++)
+		{
+			cin >> a >> b;
+			//시작과 끝 범위를 저장.
+			arr[i].first = a;
+			arr[i].second = b;
+		}
+		//시작이 다르면 끝이 빠른 순으로, 같으면 시작이 빠른 순으로
+		sort(arr + 1, arr + 1 + m, cmp);
+
+		//for (int i = 1; i <= m; i++)
+		//	cout << arr[i].first << "  " << arr[i].second << endl;
+
+		for (int i = 1; i <= m; i++)
+		{
+			for (int s = arr[i].first; s <= arr[i].second; s++)
+			{
+				if (books[s] == 0)
+				{
+					books[s] = 1;
+					answer++;
+					break;
+				}
+			}
+		}
+
+		cout << answer << endl;
+	}
+
+	return 0;
+}
