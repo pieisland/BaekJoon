@@ -1,0 +1,37 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+2019.06.18.화.
+출처: https://mygumi.tistory.com/128
+
+이전 형태의 경우의 수를 따져야 됨.
+의미를 배열로 표현을 해야되는게 헷갈림..
+이전 줄이 빈 경우, 왼쪽에 있는 경우, 오른쪽에 있는 경우.
+타일 문제와 다른 점은 앞의 결과에 따라 뒤의 결과에 영향을 미친다는 것.
+*/
+int dp[100001][3];
+
+int main(){
+
+	for (int i = 0; i < 3; i++)
+		dp[1][i] = 1;
+	int n;
+	cin >> n;
+	for (int i = 2; i <= n; i++)
+	{
+		dp[i][0] = (dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2])%9901;
+		dp[i][1] = (dp[i - 1][0] + dp[i - 1][2])%9901;
+		dp[i][2] = (dp[i - 1][0] + dp[i - 1][1])%9901;
+	}
+
+	cout << (dp[n][0] + dp[n][1] + dp[n][2])%9901 << endl;
+
+	return 0;
+}
