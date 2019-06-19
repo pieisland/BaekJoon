@@ -1,0 +1,151 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.19.수.
+탈출 진짜.. 와. 탈출.. 하.
+이전 bfs문제들과 다른 점은, 두 가지가 동시에 움직이기때문에
+같은 시간에 벌어진 일들을 함께 처리해줘야 한다는 점.
+그리고 물을 먼저 확산시키고 고슴도치를 움직여야 된다는 점.
+신경써야 되는 부분이 한두개가 아니었어...
+*/
+
+int r, c;
+char arr[50][50];
+int check1[50][50];//물의 이동
+int check2[50][50];//고슴도치의 이동
+int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };//아래, 위, 오른쪽, 왼쪽
+queue <pair<int, int>> water;
+queue <pair<int, int>> gosem;
+
+bool isInside(int y, int x)
+{
+	if (y >= 0 && y < r&&x >= 0 && x < c)
+		return true;
+	else
+		return false;
+}
+
+void show()
+{
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++)
+		{
+			cout << arr[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
+
+int bfs()
+{
+	int num = 1;
+
+	while (1)
+	{
+		//모든 큐가 비어야 멈추게 하자.
+		if (water.empty() && gosem.empty())
+			break;
+
+		while (!water.empty())
+		{
+			int cy1 = water.front().first;
+			int cx1 = water.front().second;
+
+			if (check1[cy1][cx1] != num)
+				break;
+
+			water.pop();
+
+			for (int i = 0; i < 4; i++)
+			{
+				int ny1 = cy1 + dir[i][0];
+				int nx1 = cx1 + dir[i][1];
+				
+				if (isInside(ny1, nx1) && check1[ny1][nx1] == 0 && (arr[ny1][nx1] == '.' || arr[ny1][nx1] == 'S'))
+				{
+					check1[ny1][nx1] = check1[cy1][cx1] + 1;
+					arr[ny1][nx1] = '*';
+					water.push(pair<int, int>(ny1, nx1));
+				}
+			}
+		}
+		
+		//같은 숫자끼리는 모두 처리한 후에 고슴도치의 위치를 이동시켜야 함.
+		while (!gosem.empty())
+		{
+			int cy2 = gosem.front().first;
+			int cx2 = gosem.front().second;
+
+			if (check2[cy2][cx2] != num)
+				break;
+
+			gosem.pop();
+
+			if (arr[cy2][cx2] == 'D') {//목적지에 다다랐다면,
+				return check2[cy2][cx2] - 1;
+			}
+
+			for (int i = 0; i < 4; i++)
+			{
+				int ny2 = cy2 + dir[i][0];
+				int nx2 = cx2 + dir[i][1];
+
+				if (isInside(ny2, nx2) && check1[ny2][nx2] == 0 && check2[ny2][nx2] == 0 && (arr[ny2][nx2] == '.' || arr[ny2][nx2] == 'D'))
+				{
+					check2[ny2][nx2] = check2[cy2][cx2] + 1;
+					//arr[ny2][nx2] = 'S';
+					gosem.push(pair<int, int>(ny2, nx2));
+				}
+			}
+		}
+
+		num++;
+
+		//show();
+	}
+	return -1;
+}
+
+int main(){
+
+	cin >> r >> c;
+	//맵을 만든다.
+	for(int i=0;i<r;i++)
+		for (int j = 0; j < c; j++)
+		{
+			cin >> arr[i][j];
+		}
+
+	//그리고 이제 물이 확산이 되어야 합니다.
+	for(int i=0;i<r;i++)
+		for (int j = 0; j < c; j++)
+		{
+			if (arr[i][j] == '*')//물 확산.
+			{
+				//물의 위치를 저장한다.
+				water.push(pair<int, int>(i, j));
+				check1[i][j] = 1;
+			}
+			if (arr[i][j] == 'S') {//고슴도치의 위치도 저장.
+				gosem.push(pair<int, int>(i, j));
+				check2[i][j] = 1;
+			}
+		}
+
+	//모든 물의 위치가 저장이 되면 bfs를 돌립니다.
+	int ans = bfs();
+	if (ans == -1)
+		cout << "KAKTUS" << endl;
+	else
+		cout << ans << endl;
+
+	return 0;
+}
