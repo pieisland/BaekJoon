@@ -1,0 +1,108 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+int a, b, c;
+bool arr[201][201][201];
+
+/*
+19.06.20.목.
+bfs 문제가 격자에서 경로를 찾거나 시간을 구하거나
+몇 개를 구하거나 그런 문제만 되는 게 아니라
+이런 문제도 된다고.. 가능한 모든 경우의 수를
+해보는 문제에서 사용이 되는 것 같아.
+해볼 가치가 있는 경우를 큐에 넣고 그 결과에서 또 해볼 수 있는 경우를 큐에 계속 넣어주고
+꺼내면서 시도해보고 맞으면 결과 보관하고..
+
+출처: https://jaimemin.tistory.com/658
+이분은 정말 잘 푸신다. 항상 도움을 받고 있다.
+이 문제를 어떻게 해야되는지 힘들었던 이유는,
+어떤 상태를 체크해야되는지 몰랐고(-> 물이 담겨있는 상태)
+어떤 구조로 담아야되는지 몰랐고(->pair로 3개 담았다)
+어떤 경우가 있는지를 몰랐고(->어떤 컵이 다른 컵으로 물을 담는 모든 경우)
+총체적 난국이었던 것.
+*/
+
+vector<int> bfs()
+{
+	queue<pair<pair<int, int>, int>> q;
+	q.push(make_pair(make_pair(0, 0), c));
+	vector<int> result;
+
+	while (!q.empty())
+	{
+		int a_ = q.front().first.first;
+		int b_ = q.front().first.second;
+		int c_ = q.front().second;
+		q.pop();
+
+		//이렇게 물이 담겨있는 상태를 이미 해봤다면
+		//이라는 뜻인 듯.
+		if (arr[a_][b_][c_])
+			continue;
+
+		arr[a_][b_][c_] = 1;
+		if (a_ == 0)//원하는 형태.
+			result.push_back(c_);
+		
+		//a에서 b로 물을 부을 때
+		if (a_ + b_ > b)//두 개 더한 값이 b보다 크면 다 못넣는다.
+		{
+			//더 크면은.. 
+			//다 못넣으니까 a에 남는 물 양은, a_-(b-b_)
+			//b 전체에서 b_를 제외한 용양의 a물을 넣을 수 있었으니까
+			//그만큼 빼준 거고 괄호를 제거하니까 저런 식이 나왔다.
+			q.push(make_pair(make_pair(a_ + b_ - b, b), c_));
+		}
+		else//더 크지 않으면 b에 물을 다 부을 수 있다.
+			q.push(make_pair(make_pair(0, a_+b_), c_));
+
+		//a에서 c로 물을 부을 때
+		if(a_+c_>c)
+			q.push(make_pair(make_pair(a_ + c_ - c, b_), c));
+		else//다 부을 수 있다.
+			q.push(make_pair(make_pair(0, b_), a_+c_));
+
+		//b에서 a로 물을 부을 때
+		if (a_+b_>a)
+			q.push(make_pair(make_pair(a, b_+a_-a), c_));
+		else//다 부을 수 있다.
+			q.push(make_pair(make_pair(a_+b_, 0), c_));
+
+		//b에서 c로 물을 부을 때
+		if (b_ + c_>c)
+			q.push(make_pair(make_pair(a_, b_+c_-c), c));
+		else//다 부을 수 있다.
+			q.push(make_pair(make_pair(a_, 0), b_+c_));
+
+		//c에서 a로 물을 부을 때
+		if (a_ + c_>a)
+			q.push(make_pair(make_pair(a, b_), a_+c_-a));
+		else//다 부을 수 있다.
+			q.push(make_pair(make_pair(a_+c_, b_), 0));
+
+		//c에서 b로 물을 부을 때
+		if (b_ + c_>b)
+			q.push(make_pair(make_pair(a_, b), c_+b_-b));
+		else//다 부을 수 있다.
+			q.push(make_pair(make_pair(a_, c_+b_), 0));
+	}
+	return result;
+}
+
+int main(){
+
+	cin >> a >> b >> c;
+
+	vector<int> result = bfs();
+	sort(result.begin(), result.end());
+	for (int i = 0; i < result.size(); i++)
+		cout << result[i] << endl;
+
+	return 0;
+}
