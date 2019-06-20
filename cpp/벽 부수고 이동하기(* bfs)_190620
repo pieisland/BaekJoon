@@ -1,0 +1,91 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.19.수.
+벽을 뚫을 수 있는지의 여부를 저장해야된다.
+헷갈려서 하겠나 ㅋㅋㅋ..
+출처: https://jaimemin.tistory.com/650
+*/
+
+int n, m;
+int arr[1000][1000];
+int c[1000][1000][2];//벽 뚫었니 안 뚫었니.
+//뚫을 수 있으면 1에 저장되고 뚫어버리면 0에 저장된다.
+int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+vector<pair<int, int>> wall;
+
+bool isInside(int y, int x)
+{
+	if (y >= 0 && y < n && x >= 0 && x < m)
+		return true;
+	else
+		return false;
+}
+
+int bfs()
+{
+	queue<pair<pair<int, int>, int>> q;
+	q.push(make_pair(make_pair(0, 0), 1));
+	//맨 처음은 벽을 뚫을 수 있으니까
+	c[0][0][1] = 1;
+	//c[][][] 세 번쨰가 0이면 벽 쓴 거고, 1이면 안 쓴거 아님..?
+	//c 자체에 저장되는 값은 몇 번쨰로 갔는가 인거고...
+
+	while (!q.empty())
+	{
+		//cout << "asdfasdf" << endl;
+		int cy, cx;
+		cy = q.front().first.first;
+		cx = q.front().first.second;
+		int block = q.front().second;
+		q.pop();
+
+		//마지막 위치에 도달했다면, 
+		if (cy == n-1 && cx == m-1)
+			return c[cy][cx][block];
+
+		for (int i = 0; i < 4; i++)
+		{
+			int ny, nx;
+			ny = cy + dir[i][0];
+			nx = cx + dir[i][1];
+
+			//block-1이라는 게 벽을 뚫었다는 거인 것 같은데.
+			//신기하긴 한데..
+			if (isInside(ny, nx)) {
+				if (arr[ny][nx] == 1 && block)//벽이고 벽 안뚫었으면
+				{
+					c[ny][nx][block - 1] = c[cy][cx][block] + 1;
+					q.push(make_pair(make_pair(ny, nx), block-1));
+				}
+				else if (arr[ny][nx] == 0 && c[ny][nx][block] == 0)
+				{
+					c[ny][nx][block] = c[cy][cx][block] + 1;
+					q.push(make_pair(make_pair(ny, nx), block));
+				}
+			}
+		}
+	}
+	return -1;
+}
+
+int main(){
+
+	cin >> n >> m;
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++) {
+			scanf("%1d", &arr[i][j]);
+		}
+
+	int ans = bfs();
+	cout << ans << endl;
+
+	return 0;
+}
