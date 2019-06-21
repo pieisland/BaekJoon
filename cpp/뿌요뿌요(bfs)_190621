@@ -1,0 +1,169 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.21.금.
+동일한 시간에 된 것은 함께 카운팅을 하는 부분과
+중력 부분에서 헤맸던 문제.
+한 번 내리면 그 위치에 못내리기 때문에 break해야됨.
+*/
+
+char arr[12][6];
+int c[12][6];
+int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+
+bool isInside(int y, int x)
+{
+	if (y >= 0 && y < 12 && x >= 0 && x < 6)
+		return true;
+	else
+		return false;
+}
+
+int bfs(int y, int x)
+{
+	//cout << "뭐왜" << endl;
+	queue<pair<int, int>> q;
+	q.push(pair<int, int>(y, x));
+	vector<pair<int, int>> pos;
+
+	int cnt = 0;
+
+	while (!q.empty())
+	{
+		int cy = q.front().first;
+		int cx = q.front().second;
+		char ch = arr[cy][cx];
+		q.pop();
+		cnt++;
+		//나중에 없애야 하기 때문에 저장해둠.
+		pos.push_back(pair<int, int>(cy, cx));
+
+		for (int i = 0; i < 4; i++)
+		{
+			int ny = cy + dir[i][0];
+			int nx = cx + dir[i][1];
+			
+			//범위에 맞으며 아직 방문 안했고 같은 글자라면
+			if (isInside(ny, nx) && c[ny][nx] == 0 && arr[ny][nx] == ch)
+			{
+				c[ny][nx] = 1;
+				q.push(pair<int, int>(ny, nx));
+			}
+		}
+	}
+	//총 개수가 4개 이상으로 같은 것이라면 터뜨려야 함.
+	if (cnt >= 4)
+	{
+		for (int i = 0; i < pos.size(); i++)
+		{
+			int yp = pos[i].first;
+			int xp = pos[i].second;
+			arr[yp][xp] = '.';//터뜨림.
+		}
+		return 1;
+	}
+	else
+		return -1;
+}
+
+void rearr()
+{
+	for (int i = 0; i < 6; i++)
+	{
+		int cnt = 0;
+		//밑에서부터 확인
+		for (int j = 11; j >= 0; j--)
+		{
+			if (arr[j][i] != '.')//점이 아니면 이미 잘 있는 거고.
+				continue;
+			//내 위에 있는 애들 중에서
+			for (int k = j - 1; k >= 0; k--)
+			{
+				if (arr[k][i] != '.')//내려와야 할 친구를 발견함.
+				{
+					//점 자리에 내려줌.
+					arr[j][i] = arr[k][i];
+					arr[k][i] = '.';
+					break;//한 번하고 끝내야됨.
+				}
+			}
+			/*if (arr[j][i] == '.')
+				cnt++;
+			else
+				break;*/
+		}
+		/*if (cnt > 0 && cnt < 12)//꽉 차 있거나 모두 다 빈 게 아니라면
+		{
+			for (int k = 0; k < cnt; k++)
+			{
+				arr[11 - k][i] = arr[11 - k - cnt][i];
+				arr[11-k-cnt][i]='.';
+			}
+		}*/
+	}
+}
+
+void show()
+{
+	for (int i = 0; i < 12; i++) {
+		for (int j = 0; j < 6; j++)
+		{
+			cout << arr[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	cout << endl << endl;
+}
+
+int main(){
+	
+	for (int i = 0; i < 12; i++)
+		for (int j = 0; j < 6; j++)
+			cin >> arr[i][j];
+
+	int combo = 0;
+	int check = 0;
+
+	while (1)
+	{
+		//cout << "아니왜애앵" << endl;
+		check = 0;
+		memset(c, 0, sizeof(c));//다시 해야되니까 리셋.
+		for (int i = 0; i < 12; i++)
+			for (int j = 0; j < 6; j++)
+			{
+				if (arr[i][j] != '.' && c[i][j] == 0)//방문하지 않았다면
+				{
+					c[i][j] = 1;
+					int check2 = bfs(i, j);
+
+					//터졌다면
+					if (check2 == 1)
+						check = check2;
+				}
+			}
+
+		//show();
+
+		//다 터뜨린 상태에서 밑으로 내려야 됨.
+		rearr();
+
+		//show();
+		if (check == 0)//한 번도 안터졌으면
+			break;
+		else
+			combo++;
+		//이거를 한 번 다 수행을 한 후에, 같이 수행했을 때 터진 걸 세야되잖아.
+	}
+
+	cout << combo << endl;
+	return 0;
+}
