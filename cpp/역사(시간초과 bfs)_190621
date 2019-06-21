@@ -1,0 +1,106 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.21.금.
+*/
+
+int n, k;
+int arr[401][401];
+int c1[401];
+int c2[401];
+
+int bfs(int n1, int n2)
+{
+	queue<int> before;
+	queue<int> after;
+	memset(c1, 0, sizeof(c1));
+	memset(c2, 0, sizeof(c2));
+	for (int i = 1; i <= n; i++)
+	{
+		//n1이 i보다 앞에 있다
+		if (arr[n1][i] == 1)
+		{
+			if (i == n2)//이미 정의가 되어 있었다면
+				return -1;
+
+			before.push(i);
+			c1[i] = 1;
+		}
+		if (arr[n1][i] == -1)
+		{
+			if (i == n2)
+				return 1;
+			after.push(i);
+			c2[i] = 1;
+		}
+	}
+
+	while (!before.empty())
+	{
+		int num = before.front();
+		before.pop();
+
+		for (int i = 1; i <= n; i++)
+		{
+			if (c1[i] == 0)
+			{
+				if (arr[num][i] == 1) {
+					if (i == n2)
+						return -1;
+					before.push(i);
+					c1[i] = 1;
+				}
+			}
+		}
+	}
+
+	while (!after.empty())
+	{
+		int num = after.front();
+		after.pop();
+
+		for (int i = 1; i <= n; i++)
+		{
+			if (c2[i] == 0)
+			{
+				if (arr[num][i] == 1) {
+					if (i == n2)
+						return 1;
+					after.push(i);
+					c2[i] = 1;
+				}
+			}
+		}
+	}
+	return 0;
+}
+
+int main(){
+	
+	cin >> n >> k;
+	
+	int a, b;
+	for (int i = 0; i < k; i++)
+	{
+		cin >> a >> b;
+		arr[a][b] = 1;
+		arr[b][a] = -1;
+	}
+
+	int s;
+	cin >> s;
+	for (int i = 0; i < s; i++)
+	{
+		cin >> a >> b;
+		cout << bfs(a, b) << endl;
+	}
+
+	return 0;
+}
