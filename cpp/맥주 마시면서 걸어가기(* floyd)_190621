@@ -1,0 +1,92 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.21.금.
+플로이드 와샬 문제도 참, 거리만 국한된 게 아니라는 게..
+ㅎ.ㅎ 무엇을 저장해야되는지 모르겠는 게 어렵다 정말.
+
+이 문제에서 한 정점에서 다른 정점으로 갈 수 있는가 아닌가를
+저장하는 게 arr 배열이었고
+갈수 있는지 아닌지를 판단하기 위해 있는 게 pos였다.
+모든 정점에 대해 다루기 위해 이중 for문을 돌렸고
+인덱스가 맞기 때문에 무리없이 판단 가능.
+맨해튼 거리를 구해 1000이하이면 갈 수 있다 판단하고 1을 주고
+그렇지 않을 경우 최대값을 줘서 못 감을 표시했다.
+모든 정점쌍들에 대해 구한 후에
+플로이드와샬을 돌려 작은 값으로 갱신해줬고
+마지막에 시작 정점에서 마지막 정점으로 갈 수 있는지를
+확인하면 끝.
+
+dfs, bfs로 푸는 방법도 있는데, 이참에 플로이드 와샬과
+dfs, bfs의 관계를 좀 살펴봐야겠다.
+*/
+
+int n;
+int arr[102][102];//a에서 b로 안슬프게 갈 수 있는지 저장.
+vector<pair<int, int>> pos; //모든 점들의 위치값을 저장.
+
+void floyd()
+{
+	for(int k=0;k<n;k++)
+		for(int i=0;i<n;i++)
+			for (int j = 0; j < n; j++)
+			{
+				if (i == j || j == k || i == k) continue;
+				if (arr[i][j] > arr[i][k] + arr[k][j])
+					arr[i][j] = arr[i][k] + arr[k][j];
+			}
+}
+
+int main(){
+	
+	int t;
+	cin >> t;
+	while (t--)
+	{
+		cin >> n;
+		n += 2;
+
+		int a, b;
+		for (int i = 0; i < n; i++)
+		{
+			cin >> a >> b;
+			pos.push_back(pair<int, int>(a, b));
+		}
+
+		for(int i=0;i<n;i++)
+			for (int j = 0; j < n; j++)
+			{
+				if (i == j) continue;//동일한 점은 일단 지나친다.
+				arr[i][j] = 102;//100개의 편의점 거쳐서 갈 수 있으면 101이 최대니까 
+					
+				int x = pos[i].first - pos[j].first;
+				if (x < 0)x = -x;
+				int y = pos[i].second - pos[j].second;
+				if (y < 0)y = -y;
+				//20병의 맥주를 모두 마셔도 상관없는 거리는 1000까지.
+				if (x + y <= 1000)
+					arr[i][j] = 1;
+			}
+
+		floyd();
+
+		//시작 위치에서 페스티벌까지 맥주 안 떨어지고 갈 수 있으면,
+		//맥주가 다 떨어지면 값이 102를 바로 넣기 떄문에.
+		if (arr[0][n - 1] > 0 && arr[0][n - 1] < 102)
+			cout << "happy" << endl;
+		else
+			cout << "sad" << endl;
+		
+		pos.clear();
+		memset(arr, 0, sizeof(arr));
+	}
+
+	return 0;
+}
