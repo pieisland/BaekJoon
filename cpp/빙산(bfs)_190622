@@ -28,7 +28,7 @@ bool isInside(int y, int x)
 		return false;
 }
 
-void melting()//헐.. 한꺼번에 바꿔야되구나.
+void melting()
 {
 	//모든 빙산들에 대해서 양 옆의 0개수를 세어, 녹인다.
 	for(int i = 0; i < n; i++)
