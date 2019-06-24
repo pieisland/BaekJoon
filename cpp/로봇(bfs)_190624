@@ -1,0 +1,155 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+19.06.24.월.
+방향 전환이라는 점이 좀 신선했고, 1칸씩만 이동하는 게 아니라서
+복병이 좀 있었다. 세 칸을 훌쩍 뛰어넘기 위해서는 그 사이에 있는 값들도 모두 0이어야했다는 것.
+*/
+
+int n, m;
+int arr[101][101];
+int check[101][101][5];//방향을 받는다고 하쟈.
+int dir[5][3][2] = { 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 3, 0, -1, 0, -2, 0, -3, 1, 0, 2, 0, 3, 0, -1, 0, -2, 0, -3, 0  };
+int start[3];
+int last[3];
+
+bool isInside(int y, int x)
+{
+	if (y >= 1 && y <= n && x >= 1 && x <= m)
+		return true;
+	else
+		return false;
+}
+
+//이렇게 해서 될 일이 아니다.
+void bfs(int y, int x, int d) {
+	
+	//위치와 방향을 받는다.
+	queue<pair<pair<int, int>, int>> q;
+	q.push(make_pair(make_pair(y, x), d));
+	check[y][x][d] = 1;
+
+	while (!q.empty())
+	{
+		//현재의 위치와 방향을 꺼낸다.
+		int cy = q.front().first.first;
+		int cx = q.front().first.second;
+		int cd = q.front().second;
+
+		q.pop();
+
+		//최종 목적지에 다다르면
+		if (cy == last[0] && cx == last[1] && cd == last[2]) {
+			cout << check[cy][cx][cd]-1 << endl;
+			break;
+		}
+
+		//네 방향으로 움직인다.
+		for (int i = 1; i <= 4; i++)
+		{
+			//같은 방향이라면
+			if (i == cd)
+			{
+				//0인 경우에 1칸, 2칸, 3칸 이동할 수 있는 경우로 따져서 이동
+				//이미 이동을 했는데 방향을 틀어서 이동해야 할 수도 있잖아..
+				//근데 그러면 check 값이 어떻게 갱신돼?
+				//아 방향에 대해서 따로 check를 해주니까 상관은 없겠다.
+				//생각해보니 이거 .. 장애물 다 뚫고 이동은 못하니까 그걸 고려해야 됨.
+        
+				for (int j = 2; j >=0; j--)//1칸, 2칸, 3칸으로 갈 수 있는 것에 대해
+				{
+					//깡충 뛴 값이잖아..
+					bool go = true;
+					//j가 2라면 0부터 시작해서 1칸 이동한 위치가 1인지 0인지를 확인함
+					for (int k = 0; k <= j; k++)
+					{
+						int ty = cy + dir[i][k][0];
+						int tx = cx + dir[i][k][1];
+						if (arr[ty][tx] == 1)//하나라도 1이나온다면, 그 걸로는 갈 수 없어.
+							go = false;
+					}
+
+					if(go){
+						int ny = cy + dir[i][j][0];
+						int nx = cx + dir[i][j][1];
+
+						//범위에 맞고, 아직 안 간 곳이고, 움직일 수 있는 곳이라면
+						if (isInside(ny, nx) && check[ny][nx][i] == 0 && arr[ny][nx] == 0)
+						{
+							check[ny][nx][i] = check[cy][cx][i] + 1;
+							q.push(make_pair(make_pair(ny, nx), i));
+						}
+					}
+				}
+			}
+			else
+			{
+				//방향 바꾸는 것도 증가됩니다.
+				//오른쪽, 왼쪽으로만 방향 전환이 되기 때문에..
+				//여기도 수정해야됩니다.
+				//생각해보니 이미 방문한 곳일 수도 있는 거잖아.
+				//안 방문한 곳이어야 된다
+				if (check[cy][cx][i] == 0) {
+					switch (cd)
+					{
+					case 1:
+						if(i==4||i==3)
+							check[cy][cx][i] = check[cy][cx][cd] + 1;
+						else
+							check[cy][cx][i] = check[cy][cx][cd] + 2;
+						break;
+					case 2:
+						if (i == 4 || i == 3)
+							check[cy][cx][i] = check[cy][cx][cd] + 1;
+						else
+							check[cy][cx][i] = check[cy][cx][cd] + 2;
+						break;
+					case 3:
+						if (i == 1 || i == 2)
+							check[cy][cx][i] = check[cy][cx][cd] + 1;
+						else
+							check[cy][cx][i] = check[cy][cx][cd] + 2;
+						break;
+					case 4:
+						if (i == 1 || i == 2)
+							check[cy][cx][i] = check[cy][cx][cd] + 1;
+						else
+							check[cy][cx][i] = check[cy][cx][cd] + 2;
+						break;
+					}
+
+					q.push(make_pair(make_pair(cy, cx), i));
+				}
+			}
+		}
+	}
+}
+
+int main(){
+	
+	cin >> n >> m;
+
+	//지도 초기화.
+	for (int i = 1; i <= n; i++)
+		for (int j = 1; j <= m; j++)
+			cin >> arr[i][j];
+			
+	//시작 위치와
+	for (int i = 0; i < 3; i++)
+		cin >> start[i];
+
+	//종료 위치 받음
+	for (int i = 0; i < 3; i++)
+		cin >> last[i];
+
+	bfs(start[0], start[1], start[2]);
+
+	return 0;
+}
