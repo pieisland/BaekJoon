@@ -1,0 +1,63 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+vector<int> number;
+
+//거리가 가능하다.
+bool possible(int n, int m, int dist)
+{
+	int cnt = 1;//맨 처음 위치에 공유기를 설치했다고 생각하나본데??
+	int prev = number[0];
+
+	for (int i = 1; i<n; i++)
+		if (number[i] - prev >= dist)//거리가 그 이상이면 공유기 하나 설치하는 거
+		{
+			cnt++;
+			prev = number[i];//설치 후 다음 위치 선정해줌.
+		}
+	if (cnt >= m)//설치하려는 공유기 개수에 맞으면 true
+		return true;
+	else return false;//아니면 false 입니다.
+}
+
+int main() {
+
+	int n, m;
+	cin.tie(NULL);
+	cin >> n >> m;
+
+	int tmp;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> tmp;
+		number.push_back(tmp);
+	}
+	sort(number.begin(), number.end());
+
+	//이건 거리의 의미임.
+	//띄어놓아서 설치할 수 있는 거리임..
+	int low = 1, high = number[n - 1] - number[0];
+	int result = 0;
+
+	while (low <= high)
+	{
+		int mid = (low + high) / 2;
+		if (possible(n, m, mid))
+		{
+			//result = max(result, mid);
+			low = mid + 1;
+		}
+		else
+			high = mid - 1;//숫자를 줄여서 확인. 줄이면 더 많이 카운팅 되니까.
+	}
+
+	cout << high << "\n";
+
+	return 0;
+}
