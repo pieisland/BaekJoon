@@ -1,0 +1,84 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+int n, c;
+vector<int> gong;
+
+//이 거리고 공유기를 배치를 했을 때,
+//공유기를 원래 개수대로 설치 가능해?
+bool isPossible(int dist)
+{
+	int count = 1;//맨 처음에 공유기 설치
+	int pos = gong[0];//맨 처음 위치
+
+	//모든 집에 대해
+	for (int i = 1; i < n; i++)
+	{
+		//다음 집과 공유기를 설치한 집 사이의 거리가
+		//거리보다 더 크면
+		if (gong[i] - pos >= dist)
+		{
+			count++;//공유기 개수 증가
+			pos = gong[i];//공유기를 마지막으로 설치한 곳 업데이트
+		}
+	}
+
+	if (count >= c)
+		return true;//설치를 하려는 공유기 개수와 일치하면 맞고
+	else//일치하지 않으면 안돼.
+		return false;
+
+}
+
+int BSearch(int cnt)
+{
+	//사실 low와 high는 집의 거리잖아.
+	//정답이 될 수 있는 후보라고 할 수 있지.
+	//여기에서 찾는거잖아.
+	int low = 1;
+	int high = gong[n - 1] - gong[0];
+
+	while (low <= high)
+	{
+		int mid = (low + high) / 2;
+		if (isPossible(mid))//이 길이로 공유기 설치 가능해?
+		{
+			//가능하다면, 거리를 더 넓혀보자.
+			low = mid + 1;
+		}
+		else
+			high = mid - 1;//거리를 좁혀보자. 공유기 설치 가능하게
+	}
+
+	//그렇게 해서 마지막으로 찾은 제일 긴 길이가 답이 된다
+	//high가 정답인 이유는, 마지막으로 high와 low가 겹쳐서 만들어진 값이
+	//정답이라면 low를 증가시켜서 크로스 되는 거니까 mid 값이 정답인 거고
+	//그게 정답이 아니라면 이전에 조건이 충족됐던 mid값인 mid-1로 내려가니까
+	//그게 제일 큰 값이 되는 거고.. 아무튼 뭐. 대강 이해됨.
+	return high;
+}
+
+int main() {
+
+	cin.tie(NULL);
+	cin >> n >> c;
+	int temp;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> temp;
+		gong.push_back(temp);
+	}
+
+	//집들이 순서대로 정렬이 되었다.
+	sort(gong.begin(), gong.end());
+
+	cout << BSearch(c) << '\n';
+
+	return 0;
+}
