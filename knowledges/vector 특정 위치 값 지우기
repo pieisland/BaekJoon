@@ -1,0 +1,18 @@
+vector<int> vec;
+
+...
+
+-i번째 인덱스 값을 삭제한다.
+vec.erase(vec.begin()+i);
+
+-2번째 인덱스 값부터 4번쨰 인덱스 값을 지운다(마지막은 포함 안함)
+vec.erase(vec.begin()+2, vec.begin()+5)
+
+-iterator 사용법
+for(vector<int>::iterator it = vec.begin(); it == v.end();)
+{
+  if(*it==3)
+    it=v.erase(it);//erase 함수는 해당 요소를 제거하고 그 다음 요소의 it를 반환
+  else
+    it++;
+}
