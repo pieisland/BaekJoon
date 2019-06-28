@@ -1,0 +1,230 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+2019.06.27.목.
+*/
+
+int n;
+int arr[20][20];
+int dir[4][2] = { {1, 0}, { -1, 0 }, { 0, 1 }, { 0, -1 }};
+int ans;
+
+struct Shark
+{
+	int y;
+	int x;
+	int age;
+	int food;
+
+	//초기 나이는 2살, 먹은 건 0개
+	Shark() :age(2), food(0) {};
+};
+
+bool isInside(int y, int x)
+{
+	if (y >= 0 && y < n&&x >= 0 && x < n)
+		return true;
+	else
+		return false;
+}
+
+Shark eating(Shark s)
+{
+	//cout << "개짜증나!" << endl;
+	//먹을 수 있는 것들 다 탐색해봐야됨..
+	int y = s.y;
+	int x = s.x;
+	int age = s.age;
+
+	//나이와 위치를 고려해 먹을 수 있는 것들 중에서 최단거리로
+	//먹을 수 있는 곳을 찾자.
+	vector<pair<int, int>> pos;
+	for(int i=0;i<n;i++)
+		for (int j = 0; j < n; j++)
+		{
+			//0이 아니로 나이보다 작은 수라면
+			if (arr[i][j] != 0 && arr[i][j] < age)
+			{
+				pos.push_back(make_pair(i, j));
+			}
+		}
+
+	//만약에 먹을 애들이 없으면 엄마를 호출해야지
+	if (pos.size() == 0)
+	{
+		s.y = -1;
+		return s;
+	}
+
+	//모든 먹을 수 있는 것들에 대해서 최단 거리 가지는 애들을 고른다.
+	int mindis = 10000;
+	vector<pair<int, int>> mintmp;
+	for (int k = 0; k < pos.size(); k++)
+	{
+		//그 먹을 수 있는 애들에서 최단 경로를 가지는 위치 찾기
+		int check[20][20] = {0};
+
+		//아기 상어가 먹을 수 있는 먹이의 위치
+		int oy = pos[k].first;
+		int ox = pos[k].second;
+		queue<pair<int, int>> q;
+
+		//출발 위치
+		q.push(pair<int, int>(y, x));
+		check[y][x] = 1;
+
+		//어떠한 목적지 한 곳에 갈 수 있을 때 걸리는 거리를 먼저 찾아야 된다.
+		while (!q.empty())
+		{
+			int cy = q.front().first;
+			int cx = q.front().second;
+			q.pop();
+
+			//목적지에 도달했으면
+			if (cy == oy && cx == ox)
+			{
+				//맨 처음에 찾아진 것 자체가 최단 경로로 알고있다.
+				if (check[cy][cx] < mindis) {//더 작으면 벡터를 비운 후 넣어준다.
+					mindis = check[cy][cx];
+					mintmp.clear();
+					mintmp.push_back(pair<int, int>(cy, cx));
+				}
+				else if (check[cy][cx] == mindis)//같으면 추가만 해준다.
+				{
+					mintmp.push_back(pair<int, int>(cy, cx));
+				}
+
+				break;
+			}
+			else//도달 안했으면
+			{
+				//4방향으로 가는 것 고려
+				for (int i = 0; i < 4; i++)
+				{
+					int ny = cy + dir[i][0];
+					int nx = cx + dir[i][1];
+					//범위에 맞으며 아직 방문하지 않았고 나이 이하라면(나이 같으면 이동은 가능하므로)
+					if (isInside(ny, nx) && check[ny][nx] == 0 && arr[ny][nx] <= age)
+					{
+						check[ny][nx] = check[cy][cx] + 1;
+						q.push(pair<int, int>(ny, nx));
+					}
+				}
+			}
+		}
+	}
+
+	//최단 경로들이 다 찾아졌고, 기준에 따라 하나만 선택한다
+	int up = 10000000;
+	int cnt = 0;
+	vector<pair<int, int>> tmp1;
+	for (int a = 0; a < mintmp.size(); a++)
+	{
+		//여러 개가 있을 때, 가장 위쪽의 것을 선택. 가장 위라는 건 y값이 가장 작은 것
+		if (mintmp[a].first < up)
+		{
+			up = mintmp[a].first;
+			tmp1.clear();
+			tmp1.push_back(pair<int, int>(mintmp[a].first, mintmp[a].second));
+		}
+		else if (mintmp[a].first == up)//위까지 같다면 제일 왼쪽을 선택해야됨.
+		{
+			cnt++;
+			tmp1.push_back(pair<int, int>(mintmp[a].first, mintmp[a].second));
+		}
+	}
+	//가장 왼쪽을 선택해야된다..
+	int left = 100000;
+	int eat[2];
+	if (cnt > 0)
+	{
+		//왼쪽까지 같을 순 없겠지 ^.^
+		for (int i = 0; i < tmp1.size(); i++)
+		{
+			if (tmp1[i].second < left)
+			{
+				left = tmp1[i].second;
+				eat[0] = tmp1[i].first;
+				eat[1] = tmp1[i].second;
+			}
+		}
+		//그거 먹음 처리
+		//shark의 먹은 회수 1증가하고
+		//그 자리는 0으로 바꿔줌.
+		//근데 shark는 매개변수로 받아왔으니까 변하지 않을텐데..?^.^
+		s.food += 1;
+		s.y = eat[0];
+		s.x = eat[1];
+		arr[eat[0]][eat[1]] = 0;//먹음
+		ans += mindis-1;
+	}
+	else//하나만 찾은 거니까 걔를 먹으면 된다.
+	{
+		s.food += 1;
+		s.y = tmp1[0].first;
+		s.x = tmp1[0].second;
+		arr[tmp1[0].first][tmp1[0].second] = 0;
+		ans += mindis-1;
+	}
+
+	return s;
+}
+
+void bfs(int y, int x)
+{
+	Shark s;
+	s.y = y;
+	s.x = x;
+	//계속 계산을 다시 해주면 시간 초과 개 쩔것 같은데요
+	//그리고 최단 경로로 가야되고.
+	while (1) {
+		s = eating(s);
+		if (s.y == -1)//먹을 게 없더라.
+		{
+			cout << ans << '\n';
+			break;
+		}
+
+		if (s.age == s.food)
+		{
+			s.age += 1;
+			s.food = 0;
+		}
+	}
+
+}
+
+int main() {
+
+	cin >> n;
+	int one = 0;
+	int pos[2];
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++) {
+			cin >> arr[i][j];
+			if (arr[i][j] == 1)
+				one++;
+			else if (arr[i][j] == 9)
+			{
+				pos[0] = i;
+				pos[1] = j;
+			}
+		}
+
+	if (one == 0)
+		cout << 0 << '\n';//끝
+	else
+	{
+		//pos에 대해서 먹으러 가야된다.
+		bfs(pos[0], pos[1]);
+	}
+
+	return 0;
+}
