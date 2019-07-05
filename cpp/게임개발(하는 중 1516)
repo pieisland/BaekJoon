@@ -8,25 +8,28 @@
 #include<math.h>
 using namespace std;
 
-int a[501];
-int t[501];
+int a[501];//건물의 진입 차수를 저장한다.
+int t[501];//짓는 시간을 저장한다.
 
 int main()
 {
 	int n;
-	cin>>n;
+	cin>>n;//n개의 건물이 있다.
 	vector<int> vec[501];
 
-	queue<int> q;
+	queue<int> q;//진입 차수가 0인 건물을 넣는다.
 
+	//n개의 건물에 대해
 	for(int i=0;i<n;i++)
 	{
 		int time;
 		int b;
-		cin >> time;//아니 근데 이게 걸리는 시간이라서 저렇게 못하네요.
+		cin >> time;//건물 짓는 데 걸리는 시간.
 		
 		//건물을 짓는 데 걸리는 시간을 저장한다.
 		t[i+1] = time;
+		
+		//내 건물을 짓기 전에 먼저 지어야 하는 건물 정보 저장하기.
 		while(1)
 		{
 			cin>>b;
@@ -35,23 +38,29 @@ int main()
 			else
 			{
 				//연결해줍니다.
-				a[b]++;//진입 차수를 증가시켜준다.
-				vec[i+1].push_back(b);
+				a[i+1]++;//진입 차수를 증가시켜준다.
+				//먼저 지어야 하는 건물에 내 건물 정보를 넣는다.
+				vec[b].push_back(i+1);
 			}
 		}
 	}
 
+	//n개의 건물에 대해
 	for(int i=1;i<=n;i++)
 	{
-		if(a[i]==0) //진입 차수가 0인 친구들은 넣어준다.
+		if(a[i]==0) //진입 차수가 0인 건물을 큐에 넣어준다.
 			q.push(i);
 	}
 
+	//큐가 빌때까지
+	//이제 어떻게든.. 시간만 해주면 되는데. 어떻게 저장해야되지?
+	
+	int bTime=0;
 	while(!q.empty())
 	{
-		//
 		int id = q.front();
 		q.pop();
+		bTime+=time[id];
 		cout<<id<<endl;
 		for(int i=0;i<vec[id].size();i++)
 		{
