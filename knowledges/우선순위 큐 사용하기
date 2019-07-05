@@ -1,0 +1,11 @@
+편하게 최대힙을 쓰려면
+priority_queue<int> pq;
+를 쓰면 되는데, 사실은 우선순위 큐는 이렇게 생겼다.
+
+priority_queue<자료형, 구현체, 비교 연산자>
+priority_queue<int,vector<int>,less<int> > pq;
+
+여기서 less 대신 greater<int>로 써주면 최소힙이 된다.
+
+꺼낼 때 pq.top(();
+삭제할 때 pq.pop();
