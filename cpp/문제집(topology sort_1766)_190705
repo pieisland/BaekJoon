@@ -1,0 +1,73 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+#include<math.h>
+using namespace std;
+
+/*
+19.07.05.금.
+문제(1766). 위상정렬, 우선순위 큐(최소힙). 줄 세우기 문제와 굉장히 유사하다. 다만 최소힙을 쓴다는 것.
+우선순위 큐를 사용할 때, 원래 큐 쓰듯이 쓰면 최대힙으로 만들어진다.
+원래 우선순위 큐 정의는 이렇게 생겼다.
+
+priority_queue<자료형, 구현체, 비교 연산자>
+priority_queue<int,vector<int>,less<int> > pq;
+
+여기서 less 대신 greater<int>로 써주면 최소힙이 된다.
+*/
+
+int indegree[32001];
+vector<int> v[32001];
+
+int main(){
+
+	cin.tie(0);
+	int n, m, a, b;
+	cin>>n>>m;
+
+  //최소힙 정의.
+	priority_queue<int, vector<int>,greater<int>> q;
+
+	for(int i=0;i<m;i++)
+	{
+		//연결 상태 입력.
+		cin>>a>>b;
+
+		//a에서 b로 가기 떄문에 b는 a에 연결되어 있어서 증가
+		indegree[b]++;
+		
+		//그러면 a에서 b로 향하는 방향그래프 표시
+		v[a].push_back(b);
+	}
+
+
+	for(int i=1;i<=n;i++)
+	{
+		if(indegree[i]==0)//진입차수가 0인 아이.
+			q.push(i);
+	}
+
+	while(!q.empty())
+	{
+		//그리고 우선순위 큐는 front가 아니라 top을 꺼내는 거다.
+		int num = q.top();
+		q.pop();
+		cout<< num <<" ";
+
+		//이제 지우는 애는 num이라는 수이고, 그 num이랑 연결이 된 애는
+		//진입 차수가 하나 줄어들게 되는 겁니다.
+		for(int i=0;i<v[num].size();i++)
+		{
+			//얘를 없애는 형태이잖아요.
+			//그 해당 숫자의 진입차수가 0이 됐으면 큐에 넣어준다.
+			if(--indegree[v[num][i]]==0)
+				q.push(v[num][i]);
+		}
+	}
+
+	return 0;
+}
