@@ -1,0 +1,70 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+#include<cmath>
+
+using namespace std;
+
+/*
+시간초과 무엇..;
+*/
+
+int main()
+{
+	int n;
+	cin>>n;
+	string s;
+	int num;
+	int ans=0;
+
+	while(n--)
+	{
+		cin>>s;
+
+		if(s=="add")
+		{
+			cin>>num;
+			num--;
+			ans=ans|(1<<num);
+		}
+		else if(s=="remove")
+		{
+			cin>>num;
+			num--;
+			ans=ans&~(1<<num);
+		}
+		else if(s=="toggle"){
+			cin>>num;
+			num--;		
+			ans=ans^(1<<num);
+		}
+		else if(s=="check")
+		{
+			cin>>num;
+			num--;
+
+			int tmp=ans&(1<<num);
+			if (tmp!=0)
+				cout<<1<<endl;
+			else
+				cout<<0<<endl;
+
+			//여기서 조금만 바꾸면 됩니다만.
+			//cout<<tmp<<endl;
+		}
+		else if(s=="all")
+		{
+			ans=int(pow(2.0, 21))-1;		
+		}
+		else//empty
+		{
+			ans=0;
+		}
+	}
+
+	return 0;
+}
