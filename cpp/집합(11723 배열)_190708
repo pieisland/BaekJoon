@@ -1,0 +1,66 @@
+#include <iostream>
+#include <string>
+#include <cstring>
+
+using namespace std;
+
+//아니 비트 연습해보라면서 시간초과 하는 거 무엇임..?? 그냥 배열로 풀음. 시간초과의 이유는 잘 모르겠기는 하다..
+//string 비교는 s로 바로 할 수 있다는 점이 일단 중요한 듯.
+//strcmp안 먹힌다..왜그럼?
+//새로 알게 된 사실은, memset은 0과 -1로만 초기화를 할 수 있다는 점.
+//바이트 단위 세팅을 하기 때문이라고 한다.
+bool visited[21];
+
+int main()
+{
+  //그리고 이걸 해거 그런지 모르겠는데... 시간초과 문제가 해결됐음.
+  //어쩌면 저 위에 include 했던 거를 없애서 그럴 수도 있긴 한데.. 모르겠다;
+  ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	int n;
+	cin>>n;
+	
+	string s;
+	int num;
+
+	while(n--)
+	{
+		cin>>s;
+
+		if(s=="add")
+		{
+			cin>>num;
+			visited[num]=true;
+		}
+		else if(s=="remove")
+		{
+			cin>>num;
+			visited[num]=false;
+		}
+		else if(s=="toggle"){
+			cin>>num;		
+			if(visited[num]==true)
+				visited[num]=false;
+			else
+				visited[num]=true;
+		}
+		else if(s=="check")
+		{
+			cin>>num;
+			if(visited[num]==true)
+				cout<<1<<"\n";
+			else
+				cout<<0<<"\n";
+		}
+		else if(s=="all")
+		{
+			memset(visited, true, sizeof(visited));
+		}
+		else//empty
+		{
+			memset(visited, false, sizeof(visited));
+		}
+	}
+
+	return 0;
+}
