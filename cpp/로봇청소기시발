@@ -1,0 +1,128 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+#include<math.h>
+using namespace std;
+
+int n, m;
+int r, c, d;
+int arr[51][51];
+int ans;//청소한 칸의 개수
+int dir[4][2] = { {0, -1}, {-1, 0}, {0, 1}, {1, 0} };
+int back[4][2] = { {1, 0}, {0, 1}, {-1, 0}, {0, -1} };
+int check[51][51];
+int showing[51][51];
+
+bool isInside(int y, int x)
+{
+	if (y > 0 && y < n-1&&x >= 0 && x < m-1)
+		return true;
+	else
+		return false;
+}
+
+//4방향 모두가 청소가 되어있거나 벽인지 확인한다
+bool checkClean(int y, int x)
+{
+	for (int i = 0; i < 4; i++)
+	{
+		int ny = y + dir[i][0];
+		int nx = x + dir[i][1];
+		
+		//하나라도 1이 아니면 청소를 할 수 있다는 뜻이다
+		if (check[ny][nx] != 1)
+			return false;//가능한디..?
+	}
+	return true;//청소를 모두 할 수 없구나.
+}
+
+void bfs()
+{
+	queue<pair<pair<int, int>, int>> q;
+	q.push(make_pair(make_pair(r, c), d));
+	check[r][c] = 1;//먼저 시작 위치는 바로 청소할 것이기 때문
+	ans = 1;
+
+	while (!q.empty())
+	{
+		//cout << "looping" << endl;
+		//좌표와 바라보고 있는 방향
+		int y = q.front().first.first;
+		int x = q.front().first.second;
+		int di = q.front().second;
+		q.pop();
+		//ans++;//현재 위치 청소
+		showing[y][x] = 2;
+
+		//왼쪽 방향.
+		int ny = y + dir[di][0];
+		int nx = x + dir[di][1];
+
+		//그러면 뭐나면, 범위에 맞고, 청소를 하지 않았거나 벽이 아니라면
+		//그렇다면, 청소를 하고 청소한 표시를 하고 
+		//isInside(ny, nx) &&
+		if (checkClean(y, x))//먼저 이걸 고려해야 될 듯..?
+		{
+			int ny = y + back[di][0];
+			int nx = x + back[di][1];
+			if (!arr[ny][nx])//후진 가능
+			{
+				cout << "후진" << endl;
+				q.push(make_pair(make_pair(ny, nx), di));
+			}
+		}
+		else if (check[ny][nx] == 0)
+		{
+			check[ny][nx] = 1;//청소합니다.
+							  //왼쪽으로 돈 방향을 보내준다.
+			di = di - 1;
+			if (di < 0) di = 3;
+			ans++;
+			q.push(make_pair(make_pair(ny, nx), di));
+		}//청소할 공간이 없다는 건 갈 수도 없다는 거라고 생각했음.
+		else if (check[ny][nx] == 1)//왼쪽방향 청소 공간 x
+		{
+			di = di - 1;//회전
+			if (di < 0) di = 3;
+			q.push(make_pair(make_pair(y, x), di));
+		}//방향 자체가 범위를 벗어나는 경우는 어떻게 해야되는데..??
+
+		//이 문제가 어려운 이유가 있다. 그게 뭐냐면.. 케이스가 나뉜다.
+
+	}
+}
+
+
+int main()
+{
+	cin >> n >> m;
+	cin >> r >> c >> d;
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			cin >> arr[i][j];
+			if (arr[i][j] == 1)//벽이라면
+				check[i][j] = 1;//못 감을 의미
+			showing[i][j] = arr[i][j];
+		}
+	bfs();
+
+	cout << ans << endl;
+
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j < m; j++)
+		{
+			cout << showing[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+
+	return 0;
+}
