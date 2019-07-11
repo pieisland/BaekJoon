@@ -1,0 +1,103 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+#include<math.h>
+using namespace std;
+
+int n, m;
+int r, c, d;
+int arr[50][50];
+int ans;//청소한 칸의 개수
+int dir[4][2]={{-1, 0}, {0, 1}, {1, 0}, {0, -1}};//북동남서
+int check[50][50];
+
+void bfs()
+{
+	queue<pair<pair<int, int>, int>> q;
+	q.push(make_pair(make_pair(r, c), d));
+	check[r][c] = 2;//먼저 시작 위치는 바로 청소할 것이기 때문
+	ans = 1;
+
+	while (!q.empty())
+	{
+		//cout << "looping" << endl;
+		//좌표와 바라보고 있는 방향
+		int y = q.front().first.first;
+		int x = q.front().first.second;
+		int di = q.front().second;
+		q.pop();
+
+		//check[y][x]=2;//청소했습니다.
+		//ans++;
+		
+		bool clean=false;//하는 곳마다 보면 돼요
+		//cout<<"포문시작"<<endl;
+		for(int i=0;i<4;i++)
+		{
+			//cout<<"지금방향"<<di<<endl;
+			//di=(di+(3-i))%4;
+			int ndi=(di+(3-i))%4;
+
+
+//			if(ndi>3) ndi=0;
+			//cout<<i<<"바뀐방향"<<ndi<<endl;
+			int ny=y+dir[ndi][0];
+			int nx=x+dir[ndi][1];
+
+			if(0<=ny&&ny<n&&0<=nx&&nx<m)
+				if(check[ny][nx]==0)
+				{
+					q.push(make_pair(make_pair(ny, nx), ndi));
+					clean=true;
+					check[ny][nx]=2;
+					ans++;
+
+					break;
+				}
+		}
+		//cout<<"포문끝"<<endl;
+
+		if(clean==false)//어.. 치울 곳이 없으면
+		{
+			int ny=y-dir[di][0];
+			int nx=x-dir[di][1];
+
+			if(0<=ny&&ny<n&&0<=nx&&nx<m&&check[ny][nx]!=1)//뒤로 간 방향이 1이 아니라면
+			{
+				//벽이 아닌 겁니다.
+				//벽이 아니라면.. 뒤로 갈 수 있는거지.
+				q.push(make_pair(make_pair(ny, nx), di));
+			}
+			else
+				break;
+			//뭐 벽이면 아예 안 하는 겁니다.
+		}
+
+		
+	}
+}
+
+
+int main()
+{
+	cin >> n >> m;
+	cin >> r >> c >> d;
+
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < m; j++)
+		{
+			cin >> arr[i][j];
+			if (arr[i][j] == 1)//벽이라면
+				check[i][j] = 1;//못 감을 의미
+		}
+	bfs();
+
+	cout << ans << endl;
+
+
+	return 0;
+}
