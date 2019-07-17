@@ -1,0 +1,72 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int n;
+vector<int> nums;
+int main(void)
+{ 
+	cin>>n;
+
+	int num;
+	for(int i=0;i<n;i++){
+		cin>>num;
+		nums.push_back(num);
+	}
+
+	//사칙 연산의 개수를 입력한다.
+	int a, b, c, d;
+	cin>>a>>b>>c>>d;
+
+	vector<string> vec;
+	
+	//아니 진짜 이것만 하면 되는데..ㅋㅋㅋ
+	//이 경우의 수 찾는 거 어떻게 해요..?
+	vec.push_back("+*");
+	vec.push_back("*+");//다 넣은거죠?
+
+	//숫자는 n개지만, 연산자는 n-1개 라는 걸
+	//사실 이미 알고 있으니까 
+	//이 벡터에 들어가 있는 것은? string
+	int max=-100000;
+	int min=1000000;
+	for(int i=0;i<vec.size();i++)
+	{
+		int result = nums[0];
+		int a=1;
+		//string이 들어가 있다고 하면 이렇게 해도 되겠지
+		for(int k=0;k<n-1;k++)//라고 해도 될거야!
+		{
+			//nums[a];
+			char ab = vec[i][k];
+			if(ab=='+')
+			{
+				result+=nums[a];
+			}
+			else if(ab=='-')
+			{
+				result-=nums[a];
+			}
+			else if(ab=='*')
+			{
+				result*=nums[a];
+			}
+			else
+			{
+				result/=nums[a];
+			}
+			a++;//넘어가고
+		}
+		//result값을 비교한다
+		if(result>max)
+			max=result;
+		if(result<min)
+			min=result;
+	}
+
+	//결과 출력
+	cout<<max<<endl<<min<<endl;
+
+    return 0;
+}
