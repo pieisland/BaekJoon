@@ -1,0 +1,36 @@
+package javanono;
+
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner sc = new Scanner(System.in);
+		
+		long a, b, c;
+		long k =1;
+		a=sc.nextInt();
+		b=sc.nextInt();
+		c=sc.nextInt();
+		
+		if(b>=c) System.out.print(-1);
+		else
+		{
+			while(true)
+			{
+				if(a+k*b<k*c)
+					break;
+				else
+					k++;
+			}
+			System.out.println(k);
+		}
+		
+	}
+
+}
+
+//자바는 while문을 무한루프를 시키기 위해 true를 써야 한다. 1은 안되고
+//True도 아니다. 대소문자 주의하자.
