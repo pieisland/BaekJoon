@@ -1,0 +1,15 @@
+public class Test {
+    long sum(int[] a) {
+        long ans = 0;
+        
+        for(int i=0;i<a.length;i++)
+		{
+			ans+=a[i];
+		}
+            
+        return ans;
+    }
+}
+
+//자바에서 배열의 길이는 배열이름.lenth로 알 수 있다.
+//size 아니다.
