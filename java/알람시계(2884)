@@ -1,0 +1,34 @@
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		int h;
+		int m;
+
+		Scanner sc = new Scanner(System.in);
+		h = sc.nextInt();
+		m = sc.nextInt();
+		
+		if(45<=m && m<60)
+			m-=45;
+		else {
+			m=m-45+60;
+			h-=1;
+			if(h<0)
+				h+=24;
+		}
+
+		System.out.println(h+" "+m);
+		
+	}
+
+}
+
+//자바 프로젝트 만들기
+//프로젝트 -> 패키지 -> 클래스
+
+//입력 받을 때 System.util.Scanner를 import해야됨
+//출력은 System.out.prinln();
