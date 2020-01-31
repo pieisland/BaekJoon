@@ -1,0 +1,30 @@
+package javanono;
+
+import java.util.Scanner;
+
+public class Main {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		int mod[] = new int[42];
+		Scanner sc = new Scanner(System.in);
+		
+		int num;
+		int ans=0;
+		for(int i=0;i<10;i++)
+		{
+			num=sc.nextInt();
+			mod[num%42]+=1;
+		}
+		
+		for(int i=0;i<42;i++)
+		{
+			if(mod[i]!=0)
+				ans++;
+		}
+
+		System.out.println(ans);
+	}
+
+}
