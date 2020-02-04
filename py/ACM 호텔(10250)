@@ -1,0 +1,20 @@
+t = int(input())
+
+
+for i in range(t):
+    h, w, num = input().split()
+    h = int(h)
+    w = int(w)
+    num = int(num)
+    if num%h==0:
+        floor = h
+        room = int(num/h)
+    else:
+        floor = num%h
+        room = int(num/h+1)
+
+    #print(floor, " ", room)
+    if(room<10):
+        room = '0' + str(room)
+
+    print(str(floor) + str(room))
