@@ -1,0 +1,161 @@
+package javanono;
+
+import java.util.Scanner;
+//자바는 벡터를 쓰려면 이렇게 임포트 하면 된다.
+import java.util.Vector;
+
+class Pair{
+	int first;
+	int second;
+	
+	//생성자
+	public Pair(int f, int s) {
+		first = f;
+		second = s;
+	}
+	
+	//값들을 가져오기 위함
+	public int getVal1() {
+		return first;
+	}
+	
+	public int getVal2() {
+		return second;
+	}
+}
+
+public class Main {
+
+	static int n, m;
+	static int map[][] = new int[8][8];
+	static int cpyMap[][] = new int[8][8];
+	static int dir[][]= { {0, 1}, {-1, 0}, {0, -1}, {1, 0} };
+	
+	//카메라의 위치를 담는 벡터.
+	static Vector<Pair> camera = new Vector<Pair>();
+	//어떤 각도를 선택했는지를 담는 벡터. dfs를 할 때 사용한다.
+	static Vector<Integer> angle = new Vector<Integer>();
+	static int answer = 100000000;
+	//맵에 대해서 그 맵이 어떤 방향인지..?인가 그게 뭐지? ㅋㅋㅋ
+	static int direction[][][] = new int[8][8][4];
+	
+	static void mapcpy() {
+		for(int i=0;i<n;i++)
+			for(int j=0;j<m;j++)
+				cpyMap[i][j]=map[i][j];
+	}
+	
+	static int isinside(int y, int x) {
+		if(y>=0 && y<n && x>=0&&x<m) return 1;
+		else return 0;
+	}
+	
+	static int zeronum() {
+		int ret =0;
+		for(int i=0;i<n;i++)
+			for(int j=0;j<m;j++)
+				if(cpyMap[i][j]==0) ret++;
+		
+		return ret;
+	}
+	
+	static void dfs(int cnt) {
+		if(cnt == camera.size()) {
+			for(int i=0;i<angle.size();i++) {
+				int y = camera.get(i).first;
+				int x = camera.get(i).second;
+				
+				for(int j=0;j<4;j++) {
+					if(direction[y][x][j]==1) {
+						int ny = y+dir[(angle.get(i)+j)%4][0];
+						int nx = x+dir[(angle.get(i)+j)%4][1];
+						
+						while(true) {
+							if(isinside(ny, nx)==0) break;
+							if(cpyMap[ny][nx]==6) break;
+							if(cpyMap[ny][nx]==0) cpyMap[ny][nx]=-1;
+							
+							ny+=dir[(angle.get(i)+j)%4][0];
+							nx+=dir[(angle.get(i)+j)%4][1];
+							}
+					}
+				}
+				
+				
+			}
+			
+			answer = answer<zeronum()?answer:zeronum();
+			mapcpy();
+			return;
+		}
+		
+		for(int i=0;i<4;i++) {
+			angle.addElement(i);
+			int idx = angle.size()-1;
+			dfs(cnt+1);
+			angle.remove(idx);
+		}
+	}
+	
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		Scanner sc = new Scanner(System.in);
+		n =sc.nextInt();
+		m = sc.nextInt();
+		
+		for(int i=0;i<n;i++) {
+			for(int j=0;j<m;j++) {
+				map[i][j]=sc.nextInt();
+				
+				if(1<=map[i][j]&& map[i][j]<=5) {
+					Pair a = new Pair(i, j);
+					camera.addElement(a);
+					
+					switch(map[i][j]) {
+					case 1:
+						direction[i][j][0]=1;
+						break;
+					case 2:
+						direction[i][j][0]=1;
+						direction[i][j][2]=1;
+						break;
+					case 3:
+						direction[i][j][0]=1;
+						direction[i][j][1]=1;
+						break;
+					case 4:
+						direction[i][j][0]=1;
+						direction[i][j][1]=1;
+						direction[i][j][2]=1;
+						break;
+					case 5:
+						direction[i][j][0]=1;
+						direction[i][j][1]=1;
+						direction[i][j][2]=1;
+						direction[i][j][3]=1;
+						break;
+					}
+								
+				}
+				
+			}
+		}
+		
+		mapcpy();
+		dfs(0);
+		System.out.println(answer);
+						
+	}
+
+}
+
+//자바에서 벡터를 사용하는 방법은 이렇다는 것.
+//pop을 바로 쓰는 게 없는 것 같다. 그리고 그냥 add만 해도 되는 것 같음. 굳이 elment안 붙이고.
+//pop을 할 때는 remove하고 어떤 index에 있는 애를 지우고 싶은지를 해야되어서
+//길이를 사용해서 마지막 위치를 구하는 형식으로 했다.
+
+//그리고 Pair 클래스를 선언했다.
+//클래스 변수 얻어오는 게 되게 쉽게 되어있더라.
+//아무튼 저번에 한 거 자바로 고쳐보면서 이해해봄.
