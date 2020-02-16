@@ -1,0 +1,12 @@
+vector에서 사용하는데
+Vector<Integer> vec = new Vector<Integer>();
+가 있다고 할 때
+vec.add(0);
+vec.add(3);
+vec.add(5);
+
+vec.indexOf(3);
+이라고 하면
+3이라는 원소가 있다면
+해당 원소가 있는 인덱스 값을 주고(지금은 1을 줄 것)
+없다면 -1을 반환한다.
