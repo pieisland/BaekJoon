@@ -1,0 +1,134 @@
+package javanono;
+
+import java.util.Scanner;
+//자바는 벡터를 쓰려면 이렇게 임포트 하면 된다.
+import java.util.Vector;
+
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+class Pair{
+	int first;
+	int second;
+	
+	//생성자
+	public Pair(int f, int s) {
+		first = f;
+		second = s;
+	}
+}
+
+
+public class Main {
+
+	static int n;
+	static int m;
+	static int map[][] = new int[51][51];
+	static int cpyMap[][] = new int[51][51];
+	//static int dir[][]= { {0, 1}, {-1, 0}, {0, -1}, {1, 0} };
+	
+	//카메라의 위치를 담는 벡터.
+	static Vector<Pair> chicken = new Vector<Pair>();
+	static Vector<Pair> home = new Vector<Pair>();
+	static int answer = 100000000;
+	//맵에 대해서 그 맵이 어떤 방향인지..?인가 그게 뭐지? ㅋㅋㅋ
+	
+	//선택된 치킨집의 인덱스.
+	static Vector<Integer> choosed = new Vector<Integer>();
+
+	static void getDistance() {
+		//모든 짖에 대해서 선택된 치킨 집 중 가장작은 거리를 찾는다.
+		
+		//가장 짧은 거리들의 합.
+		int dissum = 0;
+		for(int i=0;i<home.size();i++) {
+			//한 집에서의 가장 짧은 거리.
+			int distance = 1000000;
+			for(int j=0;j<choosed.size();j++) {
+				
+				int hy = home.get(i).first;
+				int hx = home.get(i).second;
+				
+				int chickenidx = choosed.get(j);
+				
+				int cy = chicken.get(chickenidx).first;
+				int cx = chicken.get(chickenidx).second;
+				
+				int ydis = (hy - cy)>0?hy-cy:cy-hy;
+				int xdis = (hx - cx)>0?hx-cx:cx-hx;
+				
+				distance = distance < (ydis+xdis) ? distance : ydis+xdis;
+			}
+			//이렇게 하면 가장 작은 거리가 나올 거
+			//answer와 distance 중 가장 작은 
+			dissum+=distance;
+		}
+		answer = answer<dissum?answer:dissum;
+	}
+	
+	static void dfs(int cnt, int maxchick) {
+		if(cnt == maxchick) {
+			//치킨 비의 개수를 정했다고해서.. 누구를 정했는지를
+			//정한 게 아니란 말이야...??
+			//그러면 뭘 해야되는거지...?
+			//집과 선택된 치킨집들의 거리 중 최소의 거리를 찾는다.
+			getDistance();
+					
+			return;
+		}
+		
+		//전체 치킨 집의 인덱스로 선택을 하면 되지.
+		for(int i=0;i<chicken.size();i++) {
+			//i라는 원소가 있다면 인덱스 값을 반환해주는데
+			//그 값이 없다면 -1을 반환한다.
+			if(choosed.indexOf(i)!=-1) return;
+			choosed.add(i);
+			int idx = choosed.size()-1;
+			dfs(cnt+1, maxchick);
+			choosed.remove(idx);
+		}
+	}
+	
+	public static void main(String[] args) throws IOException{
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		String []str = br.readLine().split(" ");
+		n=Integer.parseInt(str[0]);
+		m = Integer.parseInt(str[1]);
+		/*Scanner sc = new Scanner(System.in);
+		n =sc.nextInt();
+		m =sc.nextInt();
+		*/
+		//맵을 받고 집과 치킨집의 위치를 저장한다.
+		for(int i=0;i<n;i++) {
+			str = br.readLine().split(" ");
+			
+			for(int j=0;j<n;j++) {
+				
+				map[i][j] = Integer.parseInt(str[j]);//sc.nextInt();
+				
+				//집이라면
+				if(map[i][j]==1) {
+					//이렇게 안하고 바로 home.add(new Pair(i, j)); 해도 된다.
+					//굳이 그런거구나.
+					Pair h = new Pair(i, j);
+					home.add(h);
+				}//치킨집이라면
+				else if(map[i][j]==2) {
+					Pair k = new Pair(i, j);
+					chicken.add(k);
+				}
+			}
+		}
+		
+		//치킨집을 선택한다. 는 dfs로 해야겠지요.
+		for(int i=1;i<=m;i++) {
+			dfs(0, i);
+		}
+		
+		// TODO Auto-generated method stub
+		System.out.println(answer);					
+	}
+}
