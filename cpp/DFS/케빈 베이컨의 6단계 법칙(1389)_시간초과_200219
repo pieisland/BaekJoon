@@ -1,0 +1,128 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+알기로는. 플로이드 와샬 쓰면 쉬운 문제.
+dfs 공부하려고 dfs로 풀기는 했는데.
+시간초과 난다. 예제는 맞긴 한데
+시간초과라 뜨니.. 다른 거에 대해서도 맞는지 모르겠음.
+시간초과 나는 이유는 dfs에서 뭔가 불필요한 연산을 더 해서인 것 같다만
+뭘 손봐야되는지 모르겠다. 몰라 나는...
+dfs로 푸는 사람들도 없는 것 같아서 참고도 못한다.
+대부분 풀어도 bfs로 풀거나 플로이드 와샬로 푸는듯.
+;
+*/
+
+int n, m;//유저 수와 친구 관계 수
+int check[101][101];//?아 존나 하기 싫다 진짜..
+int dist[101][101];
+vector<int> relation[101];
+
+void dfs2(int from, int now, int to, int cnt) {
+
+	if (now == to) {
+		if (cnt < dist[from][to]) {
+			dist[from][to] = cnt;
+		}
+		return;
+	}
+
+	for (int i = 0; i < relation[now].size(); i++) {
+		int tmp = relation[now][i];
+		if (check[now][tmp] == 1 || check[tmp][now] == 1) continue;
+		check[now][tmp] = 1;
+		check[tmp][now] = 1;
+		dfs2(from, tmp, to, cnt+1);
+		check[now][tmp] = 0;
+		check[tmp][now] = 0;
+	}
+	return;
+}
+
+void printResult() {
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			if (i == j) continue;
+			printf("%d -> %d :", i, j);
+			printf("%d ", dist[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+//void dfs(int from, int now, int to, int cnt) {
+//
+//	if (now == to) {
+//		cout <<from<<" -> "<<to<<" "<< cnt << endl;
+//		return;
+//	}
+//
+//	//n이랑 연결돼있는 다른 점들
+//	for (int i = 0; i < relation[now].size(); i++) {		
+//		int t = relation[now][i];
+//		if (check[now][t] == 1 || check[t][now]==1) continue;
+//		check[now][t] = 1;
+//		check[t][now] = 1;
+//		dfs(from, t, to, cnt + 1);
+//		check[now][t] = 0;
+//		check[t][now] = 0;
+//	}
+//}
+
+int main()
+{
+	scanf("%d %d", &n, &m);
+	for (int i = 0; i < m; i++) {
+		int a, b;
+		scanf("%d %d", &a, &b);
+		relation[a].push_back(b);
+		relation[b].push_back(a);// [a] = 1;
+	}
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			dist[i][j] = 100000000;
+		}
+	}
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
+			if (i == j) continue;
+			dfs2(i, i, j, 0);
+			//dfs(i,i,  j, 0);
+		}
+	}
+	
+	//printResult();
+
+	vector<int> answer;
+	answer.push_back(10000000);//어차피 0은 없으니까.
+;	for (int i = 1; i <= n; i++) {
+		int val = 0;
+		for (int j = 1; j <= n; j++) {
+			if (i == j) continue;
+			val += dist[i][j];
+		}
+		answer.push_back(val);
+		//cout << val << endl;
+	}
+
+	int idx = 1;
+	int tmp = 10000000;
+	for (int i = 1; i <= n; i++) {
+		if (answer[i] < tmp) {
+			tmp = answer[i];
+			idx = i;
+		}
+	}
+
+	cout << idx << endl;
+
+	return 0;
+}
