@@ -1,0 +1,82 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+int t;
+int n, m;
+
+//가장 중요도가 높은 인덱스 값을 반환한다.
+int func1(vector<pair<int, int>> printer)
+{
+	int idx = 0;
+	int important = 0;
+	int n = printer.size();
+	for (int i = 0; i < n; i++) {
+		if (printer[i].second > important) {
+			idx = printer[i].first;
+			important = printer[i].second;
+		}
+	}
+	return idx;
+}
+
+vector<pair<int, int>> func2(vector<pair<int, int>> printer) {
+	pair<int, int> tmp = printer[0];
+
+	int n = printer.size();
+
+	//한 칸씩 앞으로 당긴다.
+	for (int i = 0; i < n - 1; i++) {
+		printer[i] = printer[i + 1];
+	}
+	printer.pop_back();
+	printer.push_back(tmp);
+
+	return printer;
+}
+
+int main()
+{
+	scanf("%d", &t);
+	while (t--){
+		scanf("%d %d", &n, &m);
+		vector<pair<int, int>> printer;
+		//인덱스 값, 중요도를 담고 있음.
+		for (int i = 0; i < n; i++)
+		{
+			int tmp;//중요도임
+			scanf("%d", &tmp);
+			printer.push_back({i, tmp});
+		}
+
+		int cnt = 1;
+		while (1) {
+			//가장 큰 중요도를 가지고 있는 인덱스가 반환된다.
+			int idx = func1(printer);
+
+			//가장 큰 중요도를 가지고 있는 값을 찾을 때까지 이동.
+			while (printer[0].first != idx) {
+				printer = func2(printer);
+			}
+
+			//맨 처음에 있는 애가 내가 찾던 인덱스 값이라면
+			if (printer[0].first == m) {
+				cout << cnt << endl;
+				break;
+			}
+			else
+			{
+				cnt++;
+				printer = func2(printer);//뒤로 한 칸 더 보낸다.
+				printer.pop_back();//제일 크다고 찾았던 애를 없앤다.
+			}
+		}
+	}
+
+	return 0;
+}
