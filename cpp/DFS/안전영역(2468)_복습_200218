@@ -1,0 +1,139 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+dfs랑 bfs 둘다로 풀어봤다.
+어느정도 이해되고 있다.
+dfs는 함수를 재호출하고
+bfs는 큐 안에서 끝내는 거지.
+*/
+
+int n;
+int map[100][100];
+int water[100][100];//잠겼는지 안잠겼는지 표시함
+int dir[4][2] = { {0, 1}, {0, -1}, {1, 0}, {-1, 0} };
+int check[100][100];
+int answer = -10;
+
+void waterclear() {
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			water[i][j] = 0;
+}
+
+void checkclear() {
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			check[i][j] = 0;
+}
+
+int isinside(int y, int x) {
+	if (y >= 0 && y < n && x >= 0 && x < n) return 1;
+	else return 0;
+}
+
+void showwater() {
+
+	cout << endl;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cout << water[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	cout << endl;
+}
+
+void dfs(int y, int x) {
+	check[y][x] = 1;
+	for (int i = 0; i < 4; i++) {
+		int ny = y + dir[i][0];
+		int nx = x + dir[i][1];
+		if (isinside(ny, nx) && check[ny][nx] == 0 && water[ny][nx] == 0)
+		{
+			//위에서 해주니까 안해도 되겠지?
+			dfs(ny, nx);
+		}
+	}
+}
+
+void bfs(int y, int x) {
+	queue<pair<int, int>> q;
+	q.push({ y, x });
+	check[y][x] = 1;
+	while (!q.empty()) {
+		int cy = q.front().first;
+		int cx = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 4; i++) {
+			int ny = cy + dir[i][0];
+			int nx = cx + dir[i][1];
+			if (isinside(ny, nx) && check[ny][nx] == 0 && water[ny][nx] == 0)
+			{
+				q.push({ ny, nx });
+				check[ny][nx] = 1;
+			}
+		}
+	}
+
+	//showwater();
+}
+
+int main()
+{
+	int hmax = 0;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			scanf("%d", &map[i][j]);
+			if (map[i][j] > hmax) hmax = map[i][j];
+		}
+	}
+
+	//아무 지역도 안잠길 수 있기 때문에 시작을 0부터 해야된다.
+	for (int h = 0; h < hmax; h++) {
+		waterclear();
+		checkclear();
+
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (map[i][j] <= h)
+					water[i][j] = 1;//물에 잠겼다는 것을 표시
+			}
+		}
+		
+		/*for (int i = 0; i < n; i++)
+		{
+			for (int j = 0; j < n; j++)
+				cout << water[i][j] << " ";
+			cout << endl;
+		}
+		*/
+
+		int ans = 0;
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				if (check[i][j] == 0 && water[i][j] == 0)
+				{
+					//dfs(i, j);
+					bfs(i, j);
+					ans++;
+				}
+			}
+		}
+		if (answer < ans) answer = ans;
+	}
+
+	printf("%d", answer);
+
+	return 0;
+}
