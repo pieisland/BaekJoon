@@ -1,0 +1,119 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+int n, k;
+int word[50][26];
+int sel[26];
+int all[26];
+vector<int> needs;
+vector<int> sel2;
+int answer;
+
+void dfs(int start, int cnt) {
+	//cout << "실행은 되니..?" << endl;
+
+	//모두 선택했다면
+	if (cnt == k - 5) {
+
+		//cout << "여기 들어와야지!" << endl;
+
+		//sel2에는 선택된 애의 인덱스가 들어있는데요.
+		for (int i = 0; i < sel2.size(); i++) {
+
+			//귀찮으니까 함수 만들지 말고 확인하자..
+			int idx = sel2[i];
+			sel[idx] = 1;//얘 선택됐다는거.
+		}
+
+		//for (int i = 0; i < 26; i++)
+		//	cout << sel[i] << " ";
+		//cout << endl;
+
+		int ans = 0;
+		for (int a = 0; a < n; a++) {
+			//모든 문장에 대해서
+			int check = 0; //문제가 없으면 0이고 있으면 1임..
+			for (int b = 0; b < 26; b++) {
+				if (sel[b] < word[a][b])
+				{
+					check = 1;
+					break;
+				}
+			}
+			if (check == 0) {
+				ans++;
+			}
+		}
+
+		//이제 
+		if (answer < ans) answer = ans;
+
+		//sel 초기화해야돼.
+		for (int i = 0; i < 26; i++) sel[i] = 0;
+
+		return;
+
+	}
+
+	if (start >= needs.size()) {
+		return;
+	}
+
+	//
+	for (int i = start; i < needs.size(); i++) {
+		//cout << "siba" << endl;
+
+		sel2.push_back(needs[i]);
+		dfs(start + 1, cnt + 1);
+		sel2.pop_back();
+	}
+}
+
+int main()
+{
+	scanf("%d %d", &n, &k);
+	if (k < 5) //기본적으로 들어가는 a n t i c 도 선택할 수 없음을 의미
+	{
+		printf("0");
+		return 0;
+	}
+
+	//n개의 문장을 받는다.
+	for (int i = 0; i < n; i++) {
+		string s;
+		cin >> s;
+		for (int j = 0; j < s.length(); j++) {
+			if (s[j] == 'a' || s[j] == 'n' || s[j] == 't' || s[j] == 'i' || s[j] == 'c')
+				continue;
+			
+			//cout << s[j] << " ";
+			int tmp = s[j] - 'a';
+			word[i][tmp] = 1; //해당 값이 필요함을 저장
+			all[tmp] = 1;//일단 할 때마다 다 저장하자.
+		}
+	}
+
+	//cout << "all" << endl;
+	//for (int i = 0; i < 26; i++)
+	//	cout << all[i] << " ";
+	//cout << endl;
+
+	//k-5개를 선택해야된당.
+	int num = k - 5;
+	for (int i = 0; i < 26; i++) {
+		if (all[i] != 0) needs.push_back(i);
+	}
+
+	//지금 시작 인덱스부터 0개 선택했음을 말하는거지.
+	dfs(0, 0);
+
+	cout << answer << endl;
+
+	return 0;
+}
