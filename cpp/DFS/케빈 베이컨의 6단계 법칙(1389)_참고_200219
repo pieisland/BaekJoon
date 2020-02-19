@@ -1,0 +1,72 @@
+#include<cstdio>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<string>
+#include<cstring>
+#include<queue>
+using namespace std;
+
+/*
+여기서 중요한 건.
+bfs를 이렇게 이용한다는 거겠지.
+visit을 일차원 배열로 만들었다는 것도.
+아직 익숙하지가 않아서리.
+*/
+
+int n, m;
+int rel[101][101];
+int visit[101];
+int answer = 99999;
+int ansidx;
+
+void clearvisit() {
+	for (int i = 1; i <= n; i++)
+		visit[i] = 0;
+}
+
+void bfs(int idx) {
+	visit[idx] = 1;
+	queue<int> q;
+	q.push(idx);
+
+	while (!q.empty()) {
+		int now = q.front();
+		q.pop();
+
+		for (int i = 1; i <= n; i++) {
+			if (rel[now][i] == 1 && visit[i] == 0) {
+				visit[i] = visit[now] + 1;
+				q.push(i);
+			}
+		}
+	}
+}
+
+int main(void){
+	cin >> n >> m;
+	for (int i = 0; i < m; i++) {
+		int a, b;
+		cin >> a >> b;
+		rel[a][b] = 1;
+		rel[b][a] = 1;
+	}
+
+	for (int i = 1; i <= n; i++) {
+		clearvisit();
+
+		bfs(i);
+		int sum = 0;
+		for (int j = 1; j <= n; j++) {
+			sum += visit[j] - 1;
+		}
+		if (sum < answer) {
+			answer = sum;
+			ansidx = i;
+		}
+	}
+
+	cout << ansidx << endl;
+
+	return 0;
+}
