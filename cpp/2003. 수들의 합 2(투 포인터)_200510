@@ -1,0 +1,57 @@
+#include <iostream>
+
+using namespace std;
+
+/*
+200510
+2003. 수들의 합 2
+투 포인터로 풀면 쉽게 풀 수 있는 문제
+O(n)만에 풀 수 있다.
+이게 사실 end pointer가 맨 처음에는 값을 가지고 있는 게 아닌 것 같다.
+이동을 하면서 원래 있었던 위치의 값을 더해가는 거인듯.
+
+start pointer와 end pointer의 처음 위치는 0이고
+원하는 값 이상일 때는 합을 줄이기 위해서 start pointer를 움직이고
+원래 있었던 위치의 값을 뺀 후에 이동을 하면 된다.
+end pointer가 위치를 벗어난 경우라면 그 때 멈추면 되는거고
+아니면 end pointer가 현재 위치해 있는 값을 더하고
+end pointer를 뒤로 한 칸 움직인다.
+원하는 값이 나왔으면 정답 개수를 1 증가킨다.
+*/
+
+int arr[10000];
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n, m;
+	int s = 0;
+	int e = 0;
+	int sum = 0;
+	int ans = 0;
+	cin >> n >> m;
+	for (int i = 0; i < n; i++) {
+		cin >> arr[i];
+	}
+
+	while (1) {
+		if (sum >= m) {
+			sum -= arr[s++];
+		}
+		else if (e > n - 1) {
+			break;
+		}
+		else {
+			sum += arr[e++];
+		}
+		if (sum == m) {
+			ans++;
+		}
+	}
+
+	cout << ans << '\n';
+
+	return 0;
+}
