@@ -1,0 +1,49 @@
+#include <string>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+vector<int> num;
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+  int n, s;
+	cin >> n >> s;
+	num.resize(n);
+
+	for (int i = 0; i < n; i++) {
+		cin >> num[i];
+	}
+	
+	int start = 0, end = 0;
+	int ans = 1000000;
+	long sum = 0;
+	while(1){
+		if (sum >= s) {
+			//이거일 떄 더해야되네 근데 얘는..
+			//cout << start << " " << end << endl;
+			
+			if (end - start < ans) {
+				ans = end - start;//길이인거고.
+			}
+			
+			sum -= num[start++];
+		}
+		else if (end == n) {
+			break;
+		}
+		else {
+			sum += num[end++];
+		}
+	}
+
+	if (ans == 1000000) {
+		ans = 0;
+	}
+	cout << ans << '\n';
+
+	return 0;
+}
