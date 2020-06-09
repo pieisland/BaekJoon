@@ -1,0 +1,76 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <map>
+#include <queue>
+
+using namespace std;
+
+/*
+20.06.09.화
+*/
+
+vector<int> a[201];//소들이 원하는 축사 정보.
+int d[201];
+bool c[201];//확인한 노드인지 정보를 저장한대..
+int n, m;
+
+bool dfs(int x) {
+	//연결된 모든 노드에 대해서 들어갈 수 있는지 시도한다고..?
+	for (int i = 0; i < a[x].size(); i++) {
+		int t = a[x][i];
+		//cout << "t: " << t << endl;
+		//근데 이건 별로 이해 안되긴 합니다.. 죽겠네..
+		if (c[t]) continue;
+		c[t] = true;
+
+		//이미 자리를 차지하고 있다면 dfs를 통해서
+		//그 자리를 차지하고 있는 애한테
+		//양보할 자리 없냐고 물어보는거임...
+		if (d[t] == 0 || dfs(d[t])) {
+			d[t] = x;
+			//cout << x << " -> " << t << "\n";
+			return true;
+		}
+	}
+	return false;
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n, m;
+	cin >> n >> m;
+	for (int i = 1; i <= n; i++) {
+		int cnt;
+		cin >> cnt;
+		for (int j = 0; j < cnt; j++) {
+			int tmp;
+			cin >> tmp;
+			a[i].push_back(tmp);
+		}
+	}
+
+	/*a[1].push_back(1);
+	a[1].push_back(2);
+	a[1].push_back(3);
+	a[2].push_back(1);
+	a[3].push_back(2);
+	*/
+	int count = 0;
+	for (int i = 1; i <= n; i++) {
+		//cout << "i값은 " << i << '\n';
+		fill(c, c + 201, false);
+		if (dfs(i)) count++;
+	}
+
+	cout << count << '\n';
+	/*for (int i = 1; i <= 200; i++) {
+		if (d[i] != 0)
+			cout << d[i] << "->" << i << '\n';
+	}*/
+	
+	return 0;
+}
