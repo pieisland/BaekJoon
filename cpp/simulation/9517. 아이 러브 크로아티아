@@ -1,0 +1,57 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <map>
+#include <queue>
+
+using namespace std;
+
+/*
+20.06.09.화
+9517. 아이 러브 크로아티아
+재밌게 풀 수 있는 시뮬레이션 문제.
+예능 프로그램 게임을 코딩으로 해결..
+끝나는 시간에 대한 처리랑 번호만 조금 신경 써주면 된다.
+*/
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int k;//폭탄 들고있는 사람.
+	int n;//질문 개수
+	//3분 30초면 210초
+
+	cin >> k;
+	cin >> n;
+	int time = 0;// 이 시간이 3분 30초를 넘어가면 끝입니다.
+	for (int i = 0; i < n; i++) {
+		int t;
+		char answer;
+		cin >> t >> answer;
+
+		if (answer == 'T') {
+			if (time + t < 210) {//나에게서 터지진 않는다 이거죠.
+				time += t;
+				k++;
+				if (k > 8) k = 1;
+			}
+			else {
+				break;
+			}
+		}
+		else {
+			if (time + t < 210) {
+				time += t;
+			}
+			else {
+				break;
+			}
+		}
+	}
+
+	cout << k << '\n';
+
+	return 0;
+}
