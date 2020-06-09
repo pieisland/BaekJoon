@@ -1,0 +1,125 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <map>
+#include <queue>
+
+using namespace std;
+
+/*
+20.06.09.화
+1043. 거짓말.
+그래프 문제.. 어렵다.. ㅠㅠ
+하지만 역시 bfs를 적절하게 쓰면 풀 수 있네요.
+연결관계는 bfs!
+이 문제는 연결관계에 대한 게 나와있지 않아서
+내가 알아서 서로를 연결해야했다.
+그게 사실 너무 안익숙했고 이게 맞는지도 의문이었음..
+
+내가 한 순서는
+1. 파티에 모든 사람을 저장한다.
+2. 그 후 파티의 맨 처음 사람과 다른 사람들을 연결한다
+3. 진실을 알고있는 사람을 기준으로 그 사람과 연결이 되는
+모든 사람들을 check를 1로 준다.
+4. 파티원들의 check 값이 모두 0이 되는 파티가 있으면 1증가.
+*/
+
+int n, m;//사람 수, 파티 수
+vector<int> know; //진실을 아는 사람
+int connect[51][51]; //연결관계
+vector<int> party[51]; //파티에 속한 사람들을 저장.
+
+int check[51]; //확인을 했는지 안했는지.
+
+void bfs(int n) {
+	queue<int> q;
+	q.push(n);
+
+	while (!q.empty()) {
+		int num = q.front();
+		q.pop();
+
+		for (int i = 0; i < 51; i++) {
+			if (check[i] == 1) continue;//이미 본 애면 또 완봐도 됨.
+			if (connect[num][i] == 1) {
+				//서로 연결이 돼있다
+				check[i] = 1;
+				q.push(i);
+			}
+		}
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> n >> m;
+	int t;
+	cin >> t;
+	for (int i = 0; i < t; i++)
+	{
+		int p;
+		cin >> p;
+		know.push_back(p);
+	}
+
+	//m개의 파티에 대해서 사람을 저장합니다.
+	for (int i = 0; i < m; i++) {
+		int cnt;
+		cin >> cnt;
+		for (int j = 0; j < cnt; j++) {
+			int t;
+			cin >> t;
+			party[i].push_back(t);
+		}
+	}
+
+	//모두 넣은 후에 연결 관계를 표시해보죠..
+	for (int i = 0; i < m; i++) {
+		//굳이 모든 연결을 할 필요가 없긴 해서
+		//맨 처음 애를 기준으로 다른 애들을 star 형식으로 연결해줌.
+		for (int j = 1; j < party[i].size(); j++) {
+			int a = party[i][0];
+			int b = party[i][j];
+			connect[a][b] = 1;
+			connect[b][a] = 1;
+		}
+	}
+	
+	//진실을 알고있는 애를 기준으로 다 연결.
+	//check가 된 애들은 결국 진실을 알게 되는 것.
+	for (int i = 0; i < know.size(); i++) {
+		int num = know[i];
+		check[num] = 1;
+		bfs(num);
+	}
+
+	int ans = 0;
+	for (int i = 0; i < m; i++) {
+		int c = 0;
+		for (int j = 0; j < party[i].size(); j++) {
+			int num = party[i][j];
+			//사실 어차피 다 알고있게 됐겠지만
+			//한 명이라도 진실을 알고 있다면
+			//거기서는 거짓말을 하면 안된다.
+			if (check[num] == 1) {
+				c = 1;
+				break;
+			}
+		}
+		//거짓말 해도 되면 1 증가.
+		if (c == 0) {
+			ans++;
+		}
+	}
+
+	for (int i = 1; i <= n; i++)
+		cout << check[i] << " ";
+	cout << endl;
+
+	cout << ans << '\n';
+
+	return 0;
+}
