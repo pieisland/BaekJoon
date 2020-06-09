@@ -1,0 +1,47 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <map>
+#include <queue>
+
+using namespace std;
+
+/*
+20.06.09.화
+1592. 영식이와 친구들
+간단한 시뮬레이션 문제. 숫자 빼고 더할 때만 조금 주의하면 된다.
+*/
+
+int n, m, l;
+int cnt[1001];
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> n >> m >> l;
+	int ans = 0;
+	int now = 1;//현재 위치
+	cnt[now] = 1;//몇 번을 받았는지.
+
+	while (1) {
+		if (cnt[now] % 2 == 1) {
+			//현재 공을 받은 횟수가 홀수다..
+			now += l;
+			if (now > n) now -= n;
+		}
+		else {
+			now -= l;
+			if (now <= 0) now += n;
+		}
+		cnt[now] += 1;//공을 한 번 받았죠.
+		ans++;
+		if (cnt[now] == m)
+			break;
+	}
+	
+	cout << ans << '\n';
+
+	return 0;
+}
