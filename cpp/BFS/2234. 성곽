@@ -1,0 +1,159 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+/*
+20.06.09.화
+2234. 성곽
+이 문제는 정말.
+원래 저렇게 안 줬으면 엄청 쉽게 풀었을 문제를
+숫자로 벽에 대한 정보를 줌으로써
+나를 힘들게 만든 문제.
+설명하기에도 헷갈린다만..
+어느 쪽에 벽이 있는지를 저장하는 배열을 만들어서
+상태를 저장하고
+다른 벽과 비교를 해야하기 때문에 또 wall이라는 거를 만들어서 인덱스 저장하고 볼 수 있도록 했다.
+오래 걸린 문제.
+그리고 for문을 몇 중으로 썼는데 이렇게 안 쓰고 푸는 방법이 있는지 모르겠다.
+*/
+
+int n, m;
+int map[50][50];
+int map_wall[50][50][4]; //4방향으로 어느 쪽에 벽이 있는지를 저장. 순서는 서 북 동 남.
+//이렇게 한 이유는 각각 방향에 더해지는 숫자가 서쪽이 1 북쪽이 2 동쪽이 4 남쪽이 8이라 했기 때문임.
+int check[50][50];
+int dir[4][2] = { {0, 1}, {0, -1}, {1, 0}, {-1, 0} }; //동 서 남 북
+//이건 뭐냐면 내가.. dir 방향으로 갈 때
+//동이면 내가 동쪽일 때 봐야할 인덱스랑 동쪽 방향에 있는 곳의 서쪽 인덱스임.
+int wall[4][2] = { {2, 0}, {0, 2}, {3, 1}, {1, 3} }; //(동, 서), (서, 동), (남, 북), (북, 남)
+
+//여러 번 봐야 하므로 초기화가 필요했다.
+void clearCheck() {
+	for (int i = 0; i < 50; i++) {
+		for (int j = 0; j < 50; j++) {
+			check[i][j] = 0;
+		}
+	}
+}
+
+bool isinside(int y, int x)
+{
+	if (y >= 0 && y < m && x >= 0 && x < n) return true;
+	else return false;
+}
+
+int bfs(int y, int x)
+{
+	int ret = 0;
+	queue<pair<int, int>> q;
+	q.push({ y, x });
+
+	while (!q.empty()) {
+		int cy, cx;
+		cy = q.front().first;
+		cx = q.front().second;
+		ret++;
+		q.pop();
+
+		for (int i = 0; i < 4; i++) {
+			int ny = cy + dir[i][0];
+			int nx = cx + dir[i][1];
+
+			if (isinside(ny, nx) && check[ny][nx]==0) {
+				int d1 = wall[i][0];
+				int d2 = wall[i][1];
+				if (map_wall[cy][cx][d1] + map_wall[ny][nx][d2] <= 1)
+				{
+					//벽이 없다는 의미..인데 다행히 오류가 안났다. 원래는 ==0인데.
+					q.push({ ny, nx });
+					check[ny][nx] = 1;
+				}
+			}
+		}
+	}
+
+	return ret;
+ }
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> n >> m;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> map[i][j];
+
+			int num = map[i][j];
+			int idx = 0;
+			//나머지를 이용해서 어느 방향으로 벽이 있는지를 저장한다.
+			//초기가 0으로 돼있기 때문에 문제는 없음.
+			while (num!=0) {
+				int mm = num % 2;
+				map_wall[i][j][idx++] = mm;
+				num = num / 2;
+			}
+		}
+	}
+
+	//1. 방의 개수
+	//2. 가장 넓은 방의 넓이
+	//3. 하나의 벽을 제거해서 얻을 수 있는 가장 넓은 방의 크기.
+
+	int room_cnt = 0;
+	int maxRoomSize = 0;
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			if (check[i][j] == 0) {
+				check[i][j] = 1;
+				int roomSize = bfs(i, j);
+				if (maxRoomSize < roomSize)
+					maxRoomSize = roomSize;
+				room_cnt++;
+			}
+		}
+	}
+
+	//총 방의 개수와 제일 큰 방.
+	cout << room_cnt << '\n';
+	cout << maxRoomSize << '\n';
+
+	for (int i = 0; i < m; i++) {
+		for (int j = 0; j < n; j++) {
+			for (int k = 0; k < 4; k++) {
+				if (map_wall[i][j][k] == 1) {
+					
+					//벽을 지운다.
+					map_wall[i][j][k] = 0;
+					//근데 벽이.. 같이 있는 거라서 같이 지우기 힘들다.
+					//그래서 bfs 값을 고침.
+
+					//근데 솔직히 여기 하면서 너무 오바라고 생각했음..
+					//몇 중 for문이냐. 하지만 다르게 풀려면 생각도 안나서 어쩔 수 없었다.
+					//시간 초과가 안나서 다행임.
+					clearCheck();
+					for (int a = 0; a < m; a++) {
+						for (int b = 0; b < n; b++) {
+							if (check[a][b] == 0) {
+								check[a][b] = 1;
+								int roomSize = bfs(a, b);
+								if (maxRoomSize < roomSize)
+									maxRoomSize = roomSize;
+							}
+						}
+					}
+					//다시 벽을 살린다.
+					map_wall[i][j][k] = 1;
+				}
+			}
+		}
+	}
+
+	cout << maxRoomSize << '\n';
+
+	return 0;
+}
