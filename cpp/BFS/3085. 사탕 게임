@@ -1,0 +1,215 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+/*
+20.06.09.화
+3085. 사탕 게임
+clear 해주는거 깜빡해서 제대로 안나오고
+전부 다 보는 거 안해줘서 틀리고..
+신경 쓸 게 많은 문제였다.
+근데 돌려보니까 시간이 너무 적게 나오면서 바로 통과되는게..
+이럴 수가 있나? 싶었음.
+되게 신경 쓸 게 많은 문제였고 나는 이렇게나 길게 풀었는데
+다른 사람들은 엄청 짧게 풀더라.. 어떻게 푸는거지;
+*/
+
+int n;
+char board[50][50];
+int check[50][50];
+
+int dir1[2][2] = { {1, 0}, {-1, 0} }; //세로로 이동
+int dir2[2][2] = { {0, 1}, {0, -1} }; //가로로 이동
+
+void checkClear() {
+	for (int i = 0; i < 50; i++) {
+		for (int j = 0; j < 50; j++)
+			check[i][j] = 0;
+	}
+}
+
+void show() {
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cout << board[i][j];
+		}
+		cout << '\n';
+	}
+	cout << '\n';
+}
+
+bool isinside(int y, int x) {
+	if (y >= 0 && y < n && x >= 0 && x < n) return true;
+	else return false;
+}
+
+int garo(int y, int x) {
+
+	//같은것이 몇 개 있는지를 세는 거니까.
+	int ret = 1;
+
+	queue < pair<int, int>> q;
+	q.push({ y, x });
+	check[y][x] = 1;
+	
+	while (!q.empty()) {
+		int cy, cx;
+		cy = q.front().first;
+		cx = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 2; i++) {
+			int ny = cy + dir2[i][0];
+			int nx = cx + dir2[i][1];
+
+			//안 같으면 볼 필요 없습니다.
+			if (isinside(ny, nx) && check[ny][nx] == 0) {
+				if (board[cy][cx] != board[ny][nx]) continue;
+
+				//값이 같다면..
+				check[ny][nx] = 1;
+				q.push({ ny, nx });
+				ret++;
+			}
+		}
+	}
+	
+	return ret;
+}
+
+//세로 방향으로 같은 거 몇개인지 센다.
+int sero(int y, int x) {
+
+	//같은것이 몇 개 있는지를 세는 거니까.
+	int ret = 1;
+
+	queue < pair<int, int>> q;
+	q.push({ y, x });
+	check[y][x] = 1;
+
+	while (!q.empty()) {
+		int cy, cx;
+		cy = q.front().first;
+		cx = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 2; i++) {
+			int ny = cy + dir1[i][0];
+			int nx = cx + dir1[i][1];
+
+			//안 같으면 볼 필요 없습니다.
+			if (isinside(ny, nx) && check[ny][nx] == 0) {
+				if (board[cy][cx] != board[ny][nx]) continue;
+
+				//값이 같다면..
+				check[ny][nx] = 1;
+				q.push({ ny, nx });
+				ret++;
+			}
+		}
+	}
+
+	return ret;
+}
+
+//가장 긴 길이를 찾아서 반환합니다.
+int findLong(int y, int x) {
+	int ret;
+
+	int val1 = garo(y, x);
+	checkClear();
+	int val2 = sero(y, x);
+	checkClear();
+
+	if (val1 > val2) ret = val1;
+	else ret = val2;
+
+	return ret;
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			cin >> board[i][j];
+		}
+	}
+	int maxVal = 0;
+
+	//바꾼 곳만 보는 게 아니라서 모든 곳에서 미리 확인을 해두면
+	//maxVal을.. 일단은 구해두겠네.
+	//바꾼 후에는 변화가 있는 행이랑 열은 보게 되는거니까
+	//문제는 없는 것 같아.
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			int val;
+			val = findLong(i, j);
+			if (val > maxVal) maxVal = val;
+		}
+	}
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n - 1; j++) {
+			//값이 다르지 않은 것도 해야되더라고.....
+			//근데 ..음.... 이거 위에서 전부 다 보는 거에서 검사해서
+			//주석 풀어도 될 것 같은데..?
+			//if (board[i][j] != board[i][j + 1]) 
+			{
+				//1. 바꾼다.
+				char tmp = board[i][j];
+				board[i][j] = board[i][j + 1];
+				board[i][j + 1] = tmp;
+
+				//2. 확인한다.
+				int val1, val2, val;
+				val1 = findLong(i, j);
+				val2 = findLong(i, j + 1);
+				if (val1 > val2) val = val1;
+				else val = val2;
+				if (val > maxVal) maxVal = val;
+
+				//3, 원래대로 복구한다.
+				tmp = board[i][j];
+				board[i][j] = board[i][j + 1];
+				board[i][j + 1] = tmp;
+			}
+		}
+	}
+
+	//세로로 볼 수 있을텐데.
+	for (int j = 0; j < n; j++) {
+		for (int i = 0; i < n - 1; i++) {
+			//if (board[i][j] != board[i + 1][j]) 
+			{
+				char tmp = board[i][j];
+				board[i][j] = board[i+1][j];
+				board[i+1][j] = tmp;
+
+				//2. 확인한다.
+				int val1, val2, val;
+				val1 = findLong(i, j);
+				val2 = findLong(i+1, j);
+				if (val1 > val2) val = val1;
+				else val = val2;
+				if (val > maxVal) maxVal = val;
+
+				//3, 원래대로 복구한다.
+				tmp = board[i][j];
+				board[i][j] = board[i+1][j];
+				board[i+1][j] = tmp;
+			}
+		}
+	}
+
+	cout << maxVal << '\n';
+
+	return 0;
+}
