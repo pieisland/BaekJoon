@@ -1,0 +1,142 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+/*
+20.06.10.수
+1038. 감소하는 수
+수를 1000000까지 줬지만 사실 거기까지 안나온다고 함.
+왜냐면.. 9876543210이 최대인데
+걔가 1024인가 1023번째 감소하는 수라고 해.
+
+근데 내가 한 방법으로 구하면
+너무 느리게 안나오니까 짜증나서 안함.
+방법이 틀린 건 아닌데 마지막까지 구하는게 시간이 너무 오래걸린다.
+*/
+
+//문제가 생기진 않긴 한데.. 
+int arr[1000001];
+
+vector<int> numbers;
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int i = 0;
+	int cnt = -1;
+	while (1) {
+
+		if (i >= 0 && i <= 10) {
+			numbers.push_back(i);
+			cnt++;
+			i++;
+			continue;
+		}
+
+		int num = i;
+		int m = num % 10;
+		num = num / 10;
+		int check = 0;
+
+		while (1) {
+			if (num == 0) break;
+
+			//cout << "m값: " << m << '\n';
+			//cout << "num%10: " << num % 10 << '\n';
+			if (m >= num % 10) {
+				//감소하는 수가 아님
+				check = 1;
+				break;
+			}
+			else { //감소하는 수임
+				m = num % 10;
+				num = num / 10;
+			}
+		}
+
+		if (check == 0) {
+			//감소하는 수라면.
+			numbers.push_back(i);
+			cnt++;
+			//cout << i << '\n';
+		}
+
+		if (i == 9876543210) break;
+
+		i++;
+	}
+
+	cout << "나왔다" << '\n';
+
+	/*for (int i = 0; i <= 1000000; i++) {
+		arr[i] = i;
+		//넣고 바로 판별을 해도 되긴 하죠..
+
+		//i에 대해서 판별을 하고
+		//그게 되는 수면 숫자를 넣고
+		//안되는 수면 -1이나 그런 걸 넣는거지.
+
+		if (i >= 0 && i <= 10) continue;//얘는 어차피 감소하는 수임
+		//0이 0번째 감소하는 수이기 때문이죠..
+		//이제 그러면 10을 넘어가면 판별을 해야하는데
+		int num = i;
+		int m = num % 10;
+		num = num / 10;
+		int check = 0;
+		
+		while (1) {
+			if (num == 0) break;
+
+			//cout << "m값: " << m << '\n';
+			//cout << "num%10: " << num % 10 << '\n';
+			if (m >= num % 10) {
+				//감소하는 수가 아님
+				check = 1;
+				break;
+			}
+			else { //감소하는 수임
+				m = num % 10;
+				num = num / 10;
+			}
+		}
+
+		if (check == 1) {
+			//감소하는 수가 아님.
+			arr[i] = -1;
+		}
+	}*/
+
+	/*for (int i = 0; i <= 1000000; i++) {
+		if (arr[i] == -1) continue;
+		cout << arr[i] << '\n';
+	}*/
+
+	int n;
+	cin >> n;
+
+	/*int cnt = -1;
+	int ans = -1;
+	for (int i = 0; i <= 1000000; i++) {
+		if (arr[i] != -1)
+			cnt++;
+
+		if (cnt == n) {
+			ans = i;
+			break;
+		}
+	}*/
+	int ans;
+	cout << numbers.size() << '\n';
+	if (n >= numbers.size()) ans = -1;
+	else ans = numbers[n];
+	//int ans = numbers[n];
+	
+	cout << ans << '\n';
+
+	return 0;
+}
