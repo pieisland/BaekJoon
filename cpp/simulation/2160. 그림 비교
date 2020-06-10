@@ -1,0 +1,98 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+/*
+20.06.10.수
+2160. 그림 비교
+이거는 dfs를 연습할 수 있는 문제였다.
+시뮬레이션 문제로 분류가 돼있긴 한데..
+이게 굳이 시뮬레이션이라 보다는
+일단 두 그림을 선택을 하는 데 있어서 dfs로 고르는 게 있어서
+.. 그리고 비교는 시뮬레이션이라보다는 그냥 for문으로
+다른 거를 찾는거라.
+왜 시뮬레이션으로 분류가 돼있는지는 잘 이해가 안된다.
+*/
+
+char drawing[50][5][7];
+int n;
+int ansIdx[2];
+int minVal = 10000000;
+int sel[50];
+
+int compareTwoImage(vector<int> v) {
+	int ret = 0;
+	
+	int idx1 = v[0];
+	int idx2 = v[1];
+
+	//이미지를 서로 비교를 합니다.
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 7; j++) {
+			if (drawing[idx1][i][j] != drawing[idx2][i][j])
+			{
+				//서로 다른 것의 개수를 센다.
+				ret++;
+			}
+		}
+	}
+
+	return ret;
+}
+
+void dfs(int start, int cnt, int all)
+{
+	if (cnt == all) {
+		vector<int> vec;
+		for (int i = 0; i < 50; i++) {
+			if (sel[i] == 1) {
+				vec.push_back(i);
+			}
+		}
+
+		//cout << vec[0] << " " << vec[1] << "\n";
+
+		int diff = compareTwoImage(vec);
+		if (diff < minVal) {
+			minVal = diff;
+			ansIdx[0] = vec[0];
+			ansIdx[1] = vec[1];
+		}
+
+		return;
+	}
+
+	//범위를 벗어났습니다.
+	if (start >= n) return;
+
+	for (int i = start; i < n; i++) {
+		sel[i] = 1;
+		dfs(i + 1, cnt + 1, all);
+		sel[i] = 0;
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		for (int a = 0; a < 5; a++) {
+			for (int b = 0; b < 7; b++) {
+				cin >> drawing[i][a][b];
+			}
+		}
+	}
+
+	//n개 중에서 2개를 뽑자.
+	dfs(0, 0, 2);
+
+	cout << ansIdx[0] + 1 << " " << ansIdx[1] + 1 << '\n';
+
+	return 0;
+}
