@@ -1,0 +1,149 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+/*
+20.06.10.수
+1967. 트리의 지름
+시간초과 ㅋㅋㅋ
+*/
+
+//간선의 가중치를 저장한다.
+//int val[10001][10001];
+//서로 연결이 돼있다는 것도 따로 저장을 해야겠죠..?
+//vector<int> node[10001];
+vector<pair<int, int>> node2[10001];
+vector<int> leaf;
+int check[10001];
+
+void clearCheck() {
+	for (int i = 0; i <= 10000; i++)
+		check[i] = 0;
+}
+
+void findLeaf() {
+	clearCheck();
+
+	//root는 항상 1이라고 하기 떄문입니다.
+	int num = 1;
+	queue<int> q;
+	q.push(num);
+
+	//int check[10001] = { 0, };
+	check[num] = 1;
+
+	while (!q.empty()) {
+		int n = q.front();
+		q.pop();
+		
+		int cnt = 0;
+		for (int i = 0; i < node2[n].size(); i++) {
+			int tmp = node2[n][i].first;
+			//지금 확인 안한거다 뭐다 하는 것도 있어야 되는 거 아니냐...
+			//으..끄으ㅡ..
+			if (check[tmp] == 0) {
+				q.push(tmp);
+				check[tmp] = 1;
+				cnt++;
+			}
+		}
+		if (cnt == 0) {
+			leaf.push_back(n);
+		}
+	}
+}
+
+bool isLeaf(int n) {
+	//n1은 지금 leaf이구요
+
+	for (int i = 0; i < leaf.size(); i++) {
+		if (leaf[i] == n) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+int bfs(int num) {
+
+	int ret = 0;
+
+	queue<int> q;
+	q.push(num);
+	
+	clearCheck();
+	//int check[10001] = { 0, };
+	check[num] = 1;
+
+	while (!q.empty()) {
+		int n = q.front();
+		q.pop();
+
+		if (n!=num && isLeaf(n)) {
+			if (ret < check[n])
+				ret = check[n];
+			continue;//어쨌든.. leaf이니까 그만 가도 되는거고요.
+		}
+
+		for (int i = 0; i < node2[n].size(); i++) {
+			int tmp = node2[n][i].first;
+
+			if (check[tmp] == 0) {
+				q.push(tmp);
+				check[tmp] = check[n] + node2[n][i].second;
+			}
+		}
+	}
+	//사실 마지막에 비교하는 값은.. -1을 해야됩니다.
+	//초기에 그거 확인한다고 1을 줬기 때문이죠.
+
+	return ret - 1;//가장 큰 값을 보냅니다.
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n;
+	cin >> n;
+	for (int i = 0; i < n-1; i++) {
+		int a, b, v;
+		cin >> a >> b >> v;
+		/*val[a][b] = v;
+		val[b][a] = v;
+		node[a].push_back(b);
+		node[b].push_back(a);*/
+		//가중치를 같이 저장하면..?
+		node2[a].push_back({ b , v });
+		node2[b].push_back({ a, v });
+	}
+
+	findLeaf();
+	/*cout << "leaf 입니다.." << '\n';
+	for (int i = 0; i < leaf.size(); i++) {
+		cout << leaf[i] << " ";
+	}
+	cout << endl;*/
+
+	//이제 한다고 생각하면.. 갈 수 있는 모든 경로를 가서
+	//결국 가장 큰 값을.. 구하면 될까요?ㅋㅋㅋㅋㄴㄴㄴ
+
+	//리프노드를 일단 구하긴 했는데..
+	int ans = 0;
+	for (int i = 0; i < leaf.size(); i++) {
+		//leaf에서 시작해서 가는 걸 구하고싶은데..
+		int val = bfs(leaf[i]);
+		if (val > ans) ans = val;
+	}
+
+	//사실 이거 미친 듯이 중복ㄷ될텐데 ㅋㅋㅋ.
+	cout << ans << '\n';
+
+	return 0;
+}
