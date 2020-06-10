@@ -1,0 +1,47 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+/*
+20.06.10.수
+6679. 싱기한 네자리 숫자
+진수 문제.
+*/
+
+int toOtherBit(int number, int bit) {
+
+	int num = number;
+	int ret = 0;
+
+	while (1) {
+		if (num == 0) break;
+		int m = num % bit;
+		num = num / bit;
+		ret += m;
+	}
+
+	return ret;
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+	
+	for (int i = 1000; i <= 9999; i++) {
+		int sum1, sum2, sum3;
+
+		sum1 = toOtherBit(i, 10);
+		sum2 = toOtherBit(i, 12);
+		sum3 = toOtherBit(i, 16);
+
+		if (sum1 == sum2 && sum2 == sum3) {
+			cout << i << '\n';
+		}
+	}
+
+	return 0;
+}
