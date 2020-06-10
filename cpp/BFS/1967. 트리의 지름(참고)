@@ -1,0 +1,106 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+/*
+20.06.10.수
+1967. 트리의 지름
+https://lmcoa15.tistory.com/56
+이 분 것을 참고했습니다.
+솔직히 이해가 별로 되진 않아요 ㅋㅋㅋ..
+맨 처음에 찾은 가장 가중치가 높은 그 애를 시작으로
+다시 찾아가야한다는 게
+딱히 막 이해가 되지는 않지만..
+
+그걸 제외하고도 배운 게 많기 때문에 정리를 해두겠습니다.
+
+일단 메모리 초과가 먼저 났었는데
+가중치를 저장하는 배열을 따로 만드는 게 아니라
+vector에서 pair를 통해서 같이 저장하는 게 훨씬 메모리 절약이 됩니다.
+
+그리고 시간초과가 났었는데
+나는 모든 leaf를 찾은 후에 각각의 leaf에서
+다른 leaf를 가서 확인하는 식으로 했기 때문에
+다 돌아야 되고 중복도 많이 발생을 했었죠.
+뭐.. 정답을 구하려면 위에서 이해 못하겠다고 했던 것을
+이해해야되기 때문에 음.. 이 시간 초과 문제는 좀 그렇긴 하다만
+leaf를 찾는 방법을 배웠습니다.
+연결되어 있는 다른 애들을 큐에 넣는 수를 체크해서
+큐에 한 번도 안 넣게 되면 leaf가 된다는 걸 알 수 있었습니다.
+
+하하. 어렵다 역시.
+*/
+
+vector<pair<int, int>> node2[10001];
+vector<int> leaf;
+int check[10001];
+int endpoint;
+int ans;
+
+void clearCheck() {
+	for (int i = 0; i <= 10000; i++)
+		check[i] = 0;
+}
+
+void bfs2(int point) {
+
+	queue<int> q;
+	check[point] = 1;
+	q.push(point);
+
+	while(!q.empty()) {
+		int n = q.front();
+		q.pop();
+
+		int cnt = 0;
+		for (int i = 0; i < node2[n].size(); i++) {
+			int tmp = node2[n][i].first;
+
+			if (check[tmp] == 0) {
+				q.push(tmp);
+				cnt++;
+				check[tmp] = check[n] + node2[n][i].second;
+			}
+		}
+		if (cnt == 0) {
+			//리프입니다.
+			//cout << "으아아아";
+			if (ans < check[n] - 1) {
+				ans = check[n] - 1;//가장 큰 값을 저장하고
+				endpoint = n;
+			}
+		}
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n;
+	cin >> n;
+	for (int i = 0; i < n-1; i++) {
+		int a, b, v;
+		cin >> a >> b >> v;
+		node2[a].push_back({ b , v });
+		node2[b].push_back({ a, v });
+	}
+
+	//이걸 돌면서 1번에서 시작해서 제일 깊이가 깊은
+	//하나의 노드를 찾아서 endpoint에 저장했어요.
+	bfs2(1);
+	clearCheck();	
+	//cout << endpoint << '\n';
+
+	ans = 0;
+	//이제 endpoint에서 시작해서 제일 먼 곳을 찾아 떠납니다.
+	bfs2(endpoint);
+	cout << ans << '\n';
+
+	return 0;
+}
