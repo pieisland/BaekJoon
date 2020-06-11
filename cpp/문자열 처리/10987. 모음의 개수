@@ -1,0 +1,31 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+/*
+20.06.11.목
+10987. 모음의 개수
+쉬어 가라는 문제.
+*/
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	string s;
+	cin >> s;
+	int ans = 0;
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] == 'a' || s[i] == 'e' || s[i] == 'i' || s[i] == 'o' || s[i] == 'u')
+			ans++;
+	}
+
+	cout << ans << '\n';
+
+	return 0;
+}
