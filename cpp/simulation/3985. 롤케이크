@@ -1,0 +1,56 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+/*
+20.06.11.목
+3985. 롤케이크
+간단하게 풀 수 있는 시뮬레이션 문제.
+먼저 찜했는지를 저장만 해두면 된다.
+*/
+
+int cake[1001];
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int l, n;
+	cin >> l;
+	cin >> n;
+
+	int ans1 = 0;//가장 많은 조각을 받을 거라고 예상했던 방청객 번호.
+	int maxVal1 = 0;
+	int ans2 = 0;
+	int maxVal2 = 0;
+	for (int i = 0; i < n; i++) {
+		int p, k;
+		cin >> p >> k;
+		if (k - p + 1 > maxVal1) {
+			maxVal1 = k - p + 1;
+			ans1 = i+1;
+		}
+
+		int cnt = 0;
+		for (int j = p; j <= k; j++) {
+			if (cake[j] == 0) {
+				cnt++;
+				cake[j] = i + 1;
+			}
+		}
+		if (cnt > maxVal2) {
+			maxVal2 = cnt;
+			ans2 = i + 1;
+		}
+	}
+
+	cout << ans1 << '\n';
+	cout << ans2 << '\n';
+
+	return 0;
+}
