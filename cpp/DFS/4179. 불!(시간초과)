@@ -1,0 +1,127 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+/*
+20.06.11.목
+4179. 불!
+시간초과라는데...?
+이게 내 최대 생각이었거늘...
+*/
+
+char board[1000][1000];
+int check[1000][1000];
+int r, c;
+int pos[2];
+int fire[2];
+int dir[4][2] = { {1, 0}, {-1, 0}, {0,1}, {0, -1} };
+int ans = 987654321;
+
+//사실 더 판단하는 거는 아래에서 하면 되겠어요
+bool isinside(int y, int x) {
+	if (y >= 0 && y < r && x >= 0 && x < c)
+		return true;
+	else return false;
+}
+
+//불이 번지는 시간을 check에 담아둡니다.
+void bfs(int y, int x) {
+	queue<pair<int, int>> q;
+
+	q.push({ y, x });
+	//몇 초에 불이 붙은건지를 표시하려고 해요.
+	check[y][x] = 1;
+
+	while(!q.empty()){
+		int cy = q.front().first;
+		int cx = q.front().second;
+		q.pop();
+
+		for (int i = 0; i < 4; i++) {
+			int ny = cy + dir[i][0];
+			int nx = cx + dir[i][1];
+
+			//이미 간 곳이면 안 가도 됩니다.
+			if (check[ny][nx] != 0) continue;
+			
+			if (board[ny][nx] == '.'||board[ny][nx] == 'J' ) {
+				//벽이면.. 뭐.. 안되거든요..
+				check[ny][nx] = check[cy][cx] + 1;
+				q.push({ ny, nx });
+			}
+		}
+	}
+}
+
+void dfs2(int y, int x, int cnt) {
+	//몇 번째 움직이고 있는가..
+
+	//시간 초과 난다고 해서.. 이미 크다면 안 보는 걸로 했음.
+	if (cnt >= ans) return;
+
+	//탈출을 했다!
+	if (isinside(y, x) == false) {
+		if (cnt < ans) ans = cnt;
+		return;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		int ny = y + dir[i][0];
+		int nx = x + dir[i][1];
+
+		//어차피 다시 돌아올 일은 없을 것 같고
+		//f로 가면 어차피 죽는거라서.. .만으로 가도록 한다.
+		//그렇게 되면 애초에 바깥으로 나갈 일도 없음.
+		if (board[ny][nx] == '.') {
+			//불에 탄 게 아니라면
+			if (check[ny][nx] > cnt + 1) {
+				dfs2(ny, nx, cnt + 1);
+			}
+		}
+		//탈출 한 거는 따로 처리하도록 하죠..
+		else if(isinside(ny, nx) == false){
+			dfs2(ny, nx, cnt + 1);
+		}
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> r >> c;
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			cin >> board[i][j];
+
+			if (board[i][j] == 'J') {
+				pos[0] = i;
+				pos[1] = j;
+			}
+
+			if (board[i][j] == 'F'){
+				fire[0] = i;
+				fire[1] = j;
+			}
+		}
+	}
+
+	//불이 번졌다.
+	bfs(fire[0], fire[1]);
+	//cout << "불이 번졌어요!" << '\n';
+
+	//지훈이가 움직인다.
+	dfs2(pos[0], pos[1], 1);
+
+	if (ans == 987654321) {
+		cout << "IMPOSSIBLE" << '\n';
+	}
+	else cout << ans-1 << '\n';
+
+	return 0;
+}
