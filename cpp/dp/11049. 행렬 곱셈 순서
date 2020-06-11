@@ -1,0 +1,69 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.11.목
+11049. 행렬 곱셈 순서
+앞에 파일 합치기랑 비슷하면서도 다른 문제인데
+이걸 보니까 파일 합치기는 한 것도 없는데
+지 혼자 계산되는 것 같아서 또 이해 안가기 시작함.
+얘는 옆에 있는 애는 계산해서 돌려보내는 게 있는데
+파일합치기는 그런게 없잖아....
+아.. 짜증나 그냥 ㅋㅋㅋㅋ sum 때문에 뭔가 되는 것 같기는 해도
+이해가 안돼 ㅠㅠㅠ dp가 싫은 이유야 이게 진짜로..
+*/
+
+int arr[500][2];
+int d[500][500];
+
+//a부터 b번쨰 행렬까지 곱했을 때 최소값.
+int go(int a, int b) {
+
+	if (a == b) return 0;
+
+	if (d[a][b] != 0) return d[a][b];
+	
+	//사실 핵심은 여기 아니겠냐..
+	//서로 옆에 있을 때 계산해서 결과 반환.
+	if (a + 1 == b) {
+		return arr[a][0] * arr[a][1] * arr[b][1];
+	}
+
+	//초반에 아직 구한 게 없다는 걸.. 해야되고
+	//for문을 돌면서 값이 정해지면서 계속 바뀌는 것 같음.
+	d[a][b] = -1;
+	for (int k = a; k < b; k++) {
+		int t1 = go(a, k);
+		int t2 = go(k + 1, b);
+
+		//여기도 이해 하려고 노력하면 이해는 됩니다.
+		//그림을 그리는 게 나을거임.
+		if (d[a][b] == -1 || d[a][b] > t1 + t2 + arr[a][0] * arr[k][1] * arr[b][1]) {
+			d[a][b] = t1 + t2 + arr[a][0] * arr[k][1] * arr[b][1];
+		}
+	}
+
+	return d[a][b];
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> arr[i][0] >> arr[i][1];
+	}
+
+	cout<<go(0, n - 1)<<'\n';
+
+	return 0;
+}
