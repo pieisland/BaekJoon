@@ -1,0 +1,48 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.11.목
+3986. 좋은 단어
+이것도 아까 괄호 문제랑 똑같은 문제구나..
+진짜 하나도 모르겠다가
+문제 유형이 스택이라는 걸 보고 접근했다.
+*/
+
+vector<char> vec;
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+	
+	int ans = 0;
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		string s;
+		cin >> s;
+		vec.clear();
+		for (int i = 0; i < s.size(); i++) {
+			//아무것도 안들어있으면 일단 비교를 위해서 넣어야 될거고
+			if (vec.size() == 0) vec.push_back(s[i]);
+			else {
+				//뭔가 있으면 마지막이랑 지금 값이랑 비교해서
+				char ch = vec[vec.size() - 1];
+				if (ch == s[i]) vec.pop_back();//같다면 꺼내주고
+				else vec.push_back(s[i]);//다르다면 넣어줘야된다.
+			}
+		}
+		if (vec.size() == 0) ans++;
+	}
+
+	cout << ans << '\n';
+
+	return 0;
+}
