@@ -1,0 +1,86 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.11.목
+9084. 동전
+dp 문제는 정말 내가 제일 두려워하는 문제 유형.
+왜냐고? 이해를 할 수 없어서. 식을 세우기가 무서워서.
+하나씩 해가자 ㅠㅠ 망할 dp자식..
+*/
+
+//i원을 만드는 방법의 개수를 저장한다.
+int d[10001];
+
+void clearDp() {
+	for (int i = 0; i <= 10000; i++)
+		d[i] = 0;
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int t;
+	cin >> t;
+	for(int tc=0;tc<t;tc++){
+		int n;
+		cin >> n;
+		vector<int> mon;
+		for (int i = 0; i < n; i++) {
+			int m;
+			cin >> m;
+			mon.push_back(m);
+		}
+		int want;
+		cin >> want;//만들어야 하는 금액
+
+		clearDp();
+		d[0] = 1;//0원을 만드는 방법은 1가지.
+		for (int i = 0; i < mon.size(); i++) {//모든 종류의 동전에 대해
+			for (int j = 0; j <= want; j++) {//0원부터 만들어야 하는 금액까지...
+				if (j - mon[i] >= 0) d[j] += d[j - mon[i]];
+			}
+		}
+
+		/*
+		이걸 정리해보자면요.
+		어떤 종류의 동전이 있어요.(mon[i])
+		그 동전으로 어떤 값을 만들려고 해요.(j)
+		누적해서 저장하는건데
+		어떤 만들려는 값에서 내 현재 동전을 뺀 값이 양수라면(j-mon[i]>=0)
+		내 현재 동전을 뺀 값을 만드는 방법에(d[j-mon[i]])
+		내 동전을 더하면 그 값을 만드는 방법이 증가하는거죠.(d[j] +=d[j-mon[i]])
+		그렇게 누적해서 구하다보면
+		정답은 d[want]가 되는 거에요.
+
+		모든 동전으로 d[want]를 구하는 방법이 다 누적된거에요.
+		정말 신기하죠..?
+		
+		하나의 동전을 기준으로 잡고 금액을 모두 돌린 후에
+		다른 동전을 기준으로 잡고 보는 거라서
+		중복되는 거 없어요. 
+		그래서 12원을 만드는 게 1가지가 나오죠.
+		(5, 7) (7, 5) 이렇게 두 가지인 게 아니라
+		5를 볼 때는 12원을 만들 수 없었고
+		7을 볼 때 5원이 있었기 때문에 12원을 만들 수 있게 된겁니다.
+		d[5]가 1이라서 그 때 d[12] += d[12 - 7]; 가 됐거든요.
+		*/
+
+		for (int i = 0; i <= want; i++) {
+			cout << d[i] << " ";
+		}
+		cout << endl;
+
+		cout << d[want] << '\n';
+	}
+
+	return 0;
+}
