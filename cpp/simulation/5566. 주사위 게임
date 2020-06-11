@@ -1,0 +1,57 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+/*
+20.06.11.목
+5566. 주사위 게임
+이 문제의 함정은
+맨 처음에 던지고 옮겼을 때 도착할 수도 있지만
+옮기고 그 값으로 인해서 다시 움직이게 됐을 때
+도착할 수도 있어서
+체크를 두 번 해줘야 한다는 데 있다.
+*/
+
+int board[1000];
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n, m;
+	int pos = 0;
+	cin >> n >> m;
+	for (int i = 0; i < n; i++) {
+		cin >> board[i];
+	}
+
+	//이제 주사위를 굴립니다.
+	int ans = 0;
+	for (int i = 0; i < m; i++) {
+		int num;
+		cin >> num;
+		pos = pos + num;
+		ans++;
+
+		if (pos >= n - 1) {
+			break;
+		}
+
+		//움수든 양수이든 상관없이 다시 움직입니다.
+		int val = board[pos];
+		pos += val;
+
+		if (pos >= n - 1) {
+			break;
+		}
+	}
+
+	cout << ans << '\n';
+
+	return 0;
+}
