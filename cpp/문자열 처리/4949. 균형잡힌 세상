@@ -1,0 +1,70 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.11.목
+4949. 균형잡힌 세상
+괄호 문제.
+처음에 개수로 할까 했는데 종류가 다른 두 괄호가 놔아서
+개수로 하기가 힘들 것 같았다.
+그래서 벡터에 그대로 넣기로 했다.
+
+(보다 )를 먼저 넣는 경우를 생각을 못해서(길이를 잴 수가 없음)
+한 번 틀리고.. 그거 고쳤고
+
+문제없이 괄호 열고 닫아서 벡터에 남는 게 없으면 yes고 아니면 no.
+*/
+vector<char> vec;
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+	string s;
+
+	while (1) {
+		getline(cin, s);
+		if (s == ".") break;
+
+		vec.clear();
+		for (int i = 0; i < s.size(); i++) {
+			if (s[i] == '(' || s[i] == '[') vec.push_back(s[i]);
+			else if(s[i]==')') {
+				if (vec.size() != 0) {
+					char last = vec[vec.size() - 1];
+					if (last == '(')
+						vec.pop_back();
+					else break;
+				}
+				else {
+					vec.push_back(s[i]);
+					break;
+				}
+			}
+			else if (s[i] == ']') {
+				if (vec.size() != 0) {
+					char last = vec[vec.size() - 1];
+					if (last == '[')
+						vec.pop_back();
+					else break;
+				}
+				else {
+					vec.push_back(s[i]);
+					break;
+				}
+			}
+		}
+		if (vec.size() == 0) {
+			cout << "yes" << '\n';
+		}
+		else
+			cout << "no" << '\n';
+	}
+	return 0;
+}
