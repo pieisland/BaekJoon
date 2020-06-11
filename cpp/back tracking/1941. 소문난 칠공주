@@ -1,0 +1,134 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+/*
+20.06.11.목
+1941. 소문난 칠공주
+잘못 접근했다.
+다시 풀어야 한다.
+이게. 일단 7명을 뽑고 나서 연결돼있는지를 봐야되는 거였구나 ^0^...
+*/
+
+char student[5][5];
+int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+int check[5][5];
+
+bool isinside(int y, int x) {
+	if (y >= 0 && y < 5 && x >= 0 && x < 5) return true;
+	else return false;
+}
+
+vector<vector<int>> vec;
+
+bool isok(vector<int> pos) {
+	//모든 정답이 들어있습니다.
+	bool flag = true;
+	for (int i = 0; i < vec.size(); i++) {
+		bool c = true;
+		for (int j = 0; j < vec[i].size(); j++) {
+			if (pos[j] != vec[i][j]) {
+				//하나라도 다른 게 있으면
+				c = false;
+				break;
+			}
+		}
+		if (c == true) {
+			//완전히 같은 게 있다는 의미이거든요
+			flag = false;
+			break;
+		}
+	}
+
+	if (flag == true) vec.push_back(pos);
+
+	return flag;
+}
+
+void dfs(int y, int x, int cnt) {
+	if (cnt == 7) {
+		//일곱 명을 다 골랐으면
+		//이미 고른 거였는지를 확인해얃 된다.ㄴ
+		vector<int> pos;
+		int som = 0, yeon = 0;
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				if (check[i][j] == 1) {
+					if (student[i][j] == 'S')
+						som++;
+					else yeon++;
+					pos.push_back(i);
+					pos.push_back(j);
+				}
+			}
+		}
+
+		//cout << som << ' ' << yeon << '\n';
+		//일단 조건은 만족한 겁니다.
+		if (som >= 4) {
+			isok(pos);
+		}
+
+		return;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		int ny = y + dir[i][0];
+		int nx = x + dir[i][1];
+		if (isinside(ny, nx) && check[ny][nx] == 0) {
+			check[ny][nx] = 1;
+			dfs(ny, nx, cnt + 1);
+			check[ny][nx] = 0;
+		}
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
+			cin >> student[i][j];
+		}
+	}
+
+	//이거는 dfs를 쓰긴 하겠는데
+	//중복이 없어야되는 게 제일 관건인 것 같다.
+	//출발이 누구다 인 것도 아니라서..
+	//속하는 게 중요한건데.
+	//어떻게 중복을 없애지?
+	//나는 원래 7명을 다 고른 후에 그 고른 애들 중에 y의 수가 4이상이면
+	//맞다고 하려고 했지만
+	//시작을 모든 곳에서 하게 되면 결국 중복이 나올 수밖에 없으니까..
+	//how to solve it?
+	//선택한 결과를 저장해주면 문제 없을까?
+	//근데 일단 엄청 볼텐데 그러면 ㅋㅋㅋ..
+	//아니.. 예전에도 이런 문제 풀지 않았냐. 분명 하긴 했는데
+	//그것도 좀.. 에바였는데..
+	//그리고 그러면 25개의 위치에서 다 해봐야되는거야..?
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
+			check[i][j] = 1;
+			dfs(i, j, 1);
+			check[i][j] = 0;
+		}
+	}
+	
+	for (int i = 0; i < vec.size(); i++) {
+		for (int j = 0; j < vec[i].size(); j++) {
+			cout << vec[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	cout << vec.size() << '\n';
+	//그래서 이다솜파 s, 임도연파 y를 .. 먼저 해야된다면
+
+	return 0;
+}
