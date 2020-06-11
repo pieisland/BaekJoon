@@ -1,0 +1,68 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+
+using namespace std;
+
+/*
+20.06.11.목
+1173. 운동
+운동을 할 수 없는 경우를 잘 생각하면 되는 문제.
+딱히 어려울 건 없는데.
+멈추는 거에 대해서 조금 헷갈린다.
+*/
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	//N: 운동 하려는 시간
+	//m: 맥박 최소
+	//M: 맥박의 최대 
+	//T: 운동 시에 증가하는 맥박
+	//R: 휴식 시에 감소하는 맥박
+	int N, m, M, T, R;
+	cin >> N >> m >> M >> T >> R;
+
+	int x = m;//현재 맥박
+	int cnt = 0;
+	int time = 0;//시간 측정
+
+	if (x + T > M) {//운동을 한 번도 할 수 없다면
+		time = -1;
+	}
+	else {
+		//사실 한 번을 할 수 있다면 결국 할 수는 있는 거니까.
+		while (1) {
+			if (cnt == N) {
+				break;
+			}
+
+			//맥박이 최대이하일 때 운동 선택
+			if (x + T <= M) {
+				cnt++;
+				x = x + T;//맥박 증가
+			}
+			else {
+				//맥박이 최대보다 크다면
+				x = x - R;
+				if (x < m) x = m;
+			}
+
+			time++;//이거 마지막에 보는 게.. 그지같은데진짜 ㅋㅋㅋ
+		}
+	}
+
+	cout << time << '\n';
+
+	//운동을 끝낼 수 없다면 -1을 출력하라는데..
+	//그 조건이 뭐지?
+	//쉬어도 맥박의 최대를 계속 넘어가서 운동을 할 수 없는게
+	//절대 못하는 거 아니겠냐..
+	//그러면 이제.. 이미 m+T가 M을 초과할 때 운동을 못하겠죠.
+
+	return 0;
+}
