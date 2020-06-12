@@ -1,0 +1,65 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.11.금
+12761. 돌다리
+이런 문제가 bfs로 풀 수 있는 문제였다는 걸 이제 알았다.
+저번에 라인이 이런 문제를 냈었는데..
+
+그 때는 bfs라기보다는 dp를 좀 더 원한 것 같기는 했지만
+아무튼.
+배우고 갑니다.
+*/
+
+int check[100001];
+
+int a, b, n, m;
+
+void bfs() {
+	int pos = n;
+	queue<int> q;
+	q.push(pos);
+	
+	check[pos] = 1;
+
+	while (!q.empty()) {
+		int now = q.front();
+		q.pop();
+
+		if (now == m) {
+			//처음 나오는 값이 최소인가봐.
+			cout << check[now]-1 << '\n';
+			break;
+		}
+
+		//이동할 수 있는 8가지 방법을 배열에 넣어두고 확인합니다.
+		int position[8] = { now + 1, now - 1, now + a, now - a, now + b, now - b, now*a, now*b };
+		for (int i = 0; i < 8; i++) {
+			if (position[i] >= 0 && position[i] <= 100000) {
+				if (check[position[i]] == 0) {
+					check[position[i]] = check[now] + 1;
+					q.push(position[i]);
+				}
+			}
+		}
+	}
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> a >> b >> n >> m;
+	
+	bfs();
+
+	return 0;
+}
