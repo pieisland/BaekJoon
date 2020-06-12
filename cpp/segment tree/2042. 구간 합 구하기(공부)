@@ -1,0 +1,66 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.11.금
+2042. 구간 합 구하기
+세그먼트 트리 기본.
+인자도 너무 많고.. 해야될 것도 많고
+너무 헷갈린다만 그래도 넘어야 할 산이라고 생각함.
+*/
+
+vector<long long> tree;
+vector<long long> arr;
+
+//현재 위치, 왼쪽, 오른쪽(시작과 끝임)
+long long init(int node, int l, int r) {
+	if (l == r) return tree[node] = arr[l];
+	else return tree[node] = init(node * 2, l, (l + r) / 2) + init(node * 2 + 1, (l + r) / 2 + 1, r);
+}
+
+//현재 위치, 왼쪽, 오른쪽, b값, c값
+long long update(int node, int l, int r, int idx, int v) {
+	if (idx < l || r < idx) return tree[node]; //구간 밖..
+	if (l == r) return tree[node] = v;
+	return tree[node] = update(node * 2, l, (l + r) / 2, idx, v) + update(node * 2 + 1, (l + r) / 2 + 1, r, idx, v);
+}
+
+//a부터 b번째까지 합 구하기
+long long query(int node, int l, int r, int a, int b) {
+	if (b < l || r < a) return 0;
+	if (a <= l && r <= b) return tree[node];
+	return query(node * 2, l, (l + r) / 2, a, b) + query(node * 2 + 1, (l + r) / 2 + 1, r, a, b);
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n, m, k;
+	cin >> n >> m >> k;
+	arr = vector<long long>(n + 1);
+	tree = vector<long long>(n * 4);
+	for (int i = 1; i <= n; i++)
+		cin >> arr[i];
+
+	//tree를 구성합니다.
+	init(1, 1, n);
+
+	for (int i = 1; i <= m+k; i++) {
+		int a, b, c;
+		cin >> a >> b >> c;
+		//b 값을 c로 바꾼다.
+		if (a == 1) update(1, 1, n, b, c);
+		else
+			cout << query(1, 1, n, b, c)<<'\n';
+	}
+
+	return 0;
+}
