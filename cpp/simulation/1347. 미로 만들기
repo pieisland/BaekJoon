@@ -1,0 +1,102 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.11.금
+1347. 미로 만들기
+이런 문제는 또 처음이라 굉장히 헤맸다.
+위치를 재조정해주는 게 어렵던데..
+*/
+
+int dir[4][2] = { {1, 0}, {0, -1}, {-1, 0}, {0, 1} };
+vector<int> v1;
+vector<int> v2;
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n;
+	cin >> n;
+	int y = 0;
+	int x = 0;
+	int d = 0;
+	//v.push_back({ y, x });
+	v1.push_back(y);
+	v2.push_back(x);
+	for (int i = 0; i < n; i++) {
+		char c;
+		cin >> c;
+		
+		if (c == 'R') {
+			d++;
+			if (d == 4) d = 0;
+		}
+		else if (c == 'L') {
+			d--;
+			if (d < 0) d = 3;
+		}
+		else {
+			y = y + dir[d][0];
+			x = x + dir[d][1];
+			v1.push_back(y);
+			v2.push_back(x);
+			//v.push_back({ y, x });
+		}
+	}
+
+	//여기까지는 구하겠지만..
+	//이거를 화면으로 출력하는 건 어떻게 하지?
+	int maxVal = -100;
+	int minVal = 100;
+	for (int i = 0; i < v1.size(); i++) {
+		if (v1[i] >= maxVal) maxVal = v1[i];
+		if (v1[i] <= minVal) minVal = v1[i];
+	}
+	int r = maxVal - minVal + 1;
+
+	int maxVal2 = -100;
+	int minVal2 = 100;
+
+	for (int i = 0; i < v2.size(); i++) {
+		if (v2[i] > maxVal2) maxVal2 = v2[i];
+		if (v2[i] < minVal2) minVal2 = v2[i];
+	}
+	int c = maxVal2 - minVal2 + 1;
+
+	int val[2];
+	val[0] = minVal >= 0 ? minVal : -minVal;
+	val[1] = minVal2 >= 0 ? minVal2 : -minVal2;
+
+	for (int i = 0; i < v1.size(); i++) {
+		v1[i] += val[0];
+		v2[i] += val[1];
+	}
+
+	char myMap[51][51];
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			myMap[i][j] = '#';
+		}
+	}
+
+	for (int i = 0; i < v1.size(); i++) {
+		myMap[v1[i]][v2[i]] = '.';
+	}
+
+	for (int i = 0; i < r; i++) {
+		for (int j = 0; j < c; j++) {
+			cout << myMap[i][j];
+		}
+		cout << '\n';
+	}
+
+	return 0;
+}
