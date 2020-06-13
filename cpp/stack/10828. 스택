@@ -1,0 +1,60 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.12. 토
+10828. 스택
+c++로 하니까 시간초과 안나오네.
+*/
+
+int arr[100001];
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	vector<int> val;
+
+	int n;
+	cin >> n;
+	string s;
+	int num;
+	for (int i = 0; i < n; i++) {
+		cin >> s;
+		if (s == "push") {
+			cin >> num;
+			val.push_back(num);
+		}
+		else if (s == "pop") {
+			if (val.size() == 0)
+				cout << -1 << '\n';
+			else {
+				cout<<val[val.size() - 1] << '\n';
+				val.pop_back();
+			}
+		}
+		else if (s == "top") {
+			if (val.size() == 0)
+				cout << -1 << '\n';
+			else
+			{
+				cout << val[val.size() - 1] << '\n';
+			}
+		}
+		else if (s == "empty") {
+			if (val.size() == 0) cout << 1 << '\n';
+			else cout << 0 << '\n';
+		}
+		else if (s == "size")
+			cout << val.size() << '\n';
+	}
+
+	return 0;
+}
