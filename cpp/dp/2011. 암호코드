@@ -1,0 +1,44 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.12. 토
+2011. 암호코드
+*/
+
+int d[5001];
+int num[5001];
+int mod = 1000000;
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	string s;
+	cin >> s;
+	for (int i = 1; i <= s.size(); i++) {
+		num[i] = s[i - 1] - '0';
+	}
+
+	d[0] = 1;
+	for (int i = 1; i <= s.size(); i++) {
+		if (1 <= num[i] && num[i] <= 9)
+			d[i] = (d[i] + d[i - 1]) % mod;
+		if (i == 1) continue;
+		if (num[i-1] == 0) continue;
+		int tmp = num[i - 1] * 10 + num[i];
+		if (tmp >= 10 && tmp <= 26)
+			d[i] = (d[i] + d[i - 2]) % mod;
+	}
+
+	cout << d[s.size()] << '\n';
+
+	return 0;
+}
