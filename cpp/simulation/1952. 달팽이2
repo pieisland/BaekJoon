@@ -1,0 +1,86 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.11.금
+1952. 달팽이2
+달팽이 1은 언제 풀었던 건지 모르겠네.
+꺾는 거를 그림대로만 생각해서 한 번 틀렸다.
+총 세 번을 못움직였다면 끝난 거라고 생각했는데
+이거를 밖으로 빠져나갔을 떄도 같이 셌어야 했음.
+그냥 안에서 도는 것만 생각했더니 틀렸당...
+
+ㅎㅎ.. 정답률 높은 문제인데 시간 오래걸려서 기분이 별로.
+좀 더 생각하면서 해야된다..
+*/
+
+vector<int> bookPos;
+
+int m, n;
+int arr[100][100];//아.. 필요는 하겠네요.
+int dir[4][2] = { {0, 1}, {1, 0}, {0, -1}, {-1, 0} };
+
+bool isinside(int y, int x) {
+	if (y >= 0 && y < m && x >= 0 && x < n) return true;
+	else return false;
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int ans = 0;
+	cin >> m >> n;
+
+	int y = 0;
+	int x = 0;
+	int d = 0;
+	arr[y][x] = 1;
+	int check = 0;
+	while (1) {
+		int ny = y + dir[d][0];
+		int nx = x + dir[d][1];
+		if (isinside(ny, nx) ) //빠져나가지 않았음.
+		{
+			//아직 안 간 곳이라면 가자.
+			if (arr[ny][nx] == 0) {
+				y = ny;
+				x = nx;
+				arr[y][x] = 1;
+				check = 0;
+			}
+			else //이미 간 곳이다 그럼 꺾어야지..
+			{
+				//여기가 문제가 생기네..
+				d++;
+				if (d == 4) d = 0;
+				//cout << "응 못가" << y << " " << x << '\n';
+				ans++;
+
+				check++;//이 값이 3이 되면.. 끝난 거란다.
+				if (check == 3) break;
+			}
+		}
+		else {
+			//밖으로 삐져나감
+			d++;
+			if (d == 4) d = 0;
+			//cout << "응 못가22" << y << " " << x << '\n';
+			ans++;
+
+			check++;
+			if (check == 3) break;
+		}
+	}
+
+	cout << ans - 3<< '\n';
+
+	return 0;
+}
