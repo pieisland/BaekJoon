@@ -1,0 +1,62 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.12. 토
+2096. 내려가기
+당연히 내가푼 건 아니고.. 다른 사람들 푼 거 보고 이해하고 쳐봄.
+이 문제는 슬라이딩 윈도우 문제 풀려다가 푼 dp문제.
+계속 내려가기만 하기 때문에 아마도 dp메모리 값을 두 줄만 잡고 해도
+된다는 의미인 듯. 저 위에 있는 최대값이나 최소값을 계속 기억할 필요가 없이
+내려 갈 때마다 갱신해서 쓰면 된다 이거다.
+궁금한 건 저장을 해야되는 문제랑은 어떤 차이가 있나임..
+그런 문제는 계속 내려가는 형식이 아니라서 이전 값을 좀 쓸 필요가 있다거나
+그런 게 아닐까 싶다.
+*/
+
+int arr[100000][3];
+int mindp[2][3];
+int maxdp[2][3];
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n;
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> arr[i][0] >> arr[i][1] >> arr[i][2];
+	}
+
+	for (int i = 0; i < n; i++) {
+		mindp[1][0] = arr[i][0] + min(mindp[0][0], mindp[0][1]);
+		mindp[1][1] = arr[i][1] + min(mindp[0][0], min(mindp[0][1], mindp[0][2]));
+		mindp[1][2] = arr[i][2] + min(mindp[0][1], mindp[0][2]);
+
+		mindp[0][0] = mindp[1][0];
+		mindp[0][1] = mindp[1][1];
+		mindp[0][2] = mindp[1][2];
+
+		maxdp[1][0] = arr[i][0] + max(maxdp[0][0], maxdp[0][1]);
+		maxdp[1][1] = arr[i][1] + max(maxdp[0][0], max(maxdp[0][1], maxdp[0][2]));
+		maxdp[1][2] = arr[i][2] + max(maxdp[0][1], maxdp[0][2]);
+
+		maxdp[0][0] = maxdp[1][0];
+		maxdp[0][1] = maxdp[1][1];
+		maxdp[0][2] = maxdp[1][2];
+	}
+
+	int minval = min(mindp[0][0], min(mindp[0][1], mindp[0][2]));
+	int maxval = max(maxdp[0][0], max(maxdp[0][1], maxdp[0][2]));
+
+	cout << maxval << " " << minval << '\n';
+
+	return 0;
+}
