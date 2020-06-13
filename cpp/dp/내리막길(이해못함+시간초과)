@@ -1,0 +1,49 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.12. 토
+2011. 암호코드
+*/
+
+int m, n;
+int arr[501][501];
+int d[501][501];
+int dir[4][2] = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+
+int go(int y, int x) {
+	if (y == m - 1 && x == n - 1) return 1;
+	if (d[y][x]) return d[y][x];
+	for (int i = 0; i < 4; i++) {
+		int ny = y + dir[i][0];
+		int nx = x + dir[i][1];
+		if (0 <= ny && ny < m && 0 <= nx && nx < n)
+			if (arr[y][x] > arr[ny][nx]) d[y][x] += go(ny, nx);
+	}
+	return d[y][x];
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> m >> n;
+	for (int i = 0; i < m; i++)
+	{
+		for (int j = 0; j < n; j++) {
+			cin >> arr[i][j];
+		}
+	}
+
+	go(0, 0);
+	cout << d[0][0] << '\n';
+
+	return 0;
+}
