@@ -1,0 +1,66 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+20.06.12. 토
+1991. 트리 순회
+재귀호출로 풀기.
+항상 트리는 나에게 무서운 존재였기 때문에
+문제를 풀어봐야지..
+
+나는 진짜 이게
+이렇게만 썼는데 되는 게 너무 신기해.....
+재귀호출 이해하기 어려움..;
+*/
+
+int a[26][2];
+int n;
+
+void preorder(int node) {
+	if (node == -1) return;
+	cout << char(node + 'A');
+	preorder(a[node][0]);
+	preorder(a[node][1]);
+}
+
+void inorder(int node) {
+	if (node == -1) return;
+	inorder(a[node][0]);
+	cout << char(node + 'A');
+	inorder(a[node][1]);
+}
+
+void postorder(int node) {
+	if (node == -1) return;
+	postorder(a[node][0]);
+	postorder(a[node][1]);
+	cout << char(node + 'A');
+}
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		char root, left, right;
+		cin >> root >> left >> right;
+
+		a[root - 'A'][0] = left != '.' ? left - 'A' : -1;
+		a[root - 'A'][1] = right != '.' ? right - 'A' : -1;
+	}
+	preorder(0);
+	cout << '\n';
+	inorder(0);
+	cout << '\n';
+	postorder(0);
+	cout << '\n';
+	return 0;
+}
