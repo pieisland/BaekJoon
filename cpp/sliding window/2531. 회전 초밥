@@ -1,0 +1,91 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <stdio.h>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+#include <map>
+
+using namespace std;
+
+int n, d, k, c;
+int chobab[30001];
+int kindof[3001];
+
+/*
+200625 목요일
+2531. 회전 초밥
+슬라이딩 윈도우 문제라고 하는데
+이렇게 푸는 게 맞는건지는 모르겠다.
+솔직히 two pointer 가티 풀었음.
+맨 앞에 있는 것을 제외하고 다른 것들의 상태를 저장을 했고
+for문을 돌면서 맨 앞에 보게 되는 값이 새로운 거면 cnt 증가하고
+개수는 항상 증가.
+쿠폰으로 새로운 초밥을 얻을 수 있으면 변수에 저장해서
+결과적으로 cnt 값이랑 cou 값을 더한 게 최종 개수.
+비교해서 더 크면 answer에 집어넣는다.
+s값에 대해서 옮기기 전에 빼고 값이 0이면 cnt 감소해주고
+s와 e값을 증가.
+e값은 n이상이 되면 n을 뺴준다.
+*/
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	cin >> n >> d >> k >> c;
+	for (int i = 0; i < n; i++) {
+		cin >> chobab[i];
+	}
+
+	int s = 0;
+	int e = k - 1;
+	int cnt = 0;
+	int answer = 0;
+
+	//마지막 제외하고 안에 개수 세기.
+	for (int i = 0; i < k - 1; i++) {
+		if (kindof[chobab[i]] == 0) {
+			cnt++;
+		}
+		kindof[chobab[i]] += 1;
+	}
+
+	int cou = 0;
+	for (int i = 0; i < n; i++) {
+		cou = 0;
+
+		//새로운 초밥 종류라면 cnt 증가
+		if (kindof[chobab[e]] == 0) {
+			cnt++;
+		}
+		//개수 세기
+		kindof[chobab[e]] += 1;
+
+		//포함이 안돼있으면 쿠폰으로 먹음.
+		if (kindof[c] == 0) {
+			cou = 1;
+		}
+
+		if (cnt + cou > answer) answer = cnt + cou;
+
+		//이동하기 전에 이전 값은 처리해줌
+		kindof[chobab[s]] -= 1;
+
+		//개수가 0이면 cnt 감소
+		if (kindof[chobab[s]] == 0)
+		{
+			cnt -= 1;
+		}
+
+		s++;
+		e++;
+		if (e == n) e -= n;
+	}
+
+	cout << answer << '\n';
+
+	return 0;
+}
