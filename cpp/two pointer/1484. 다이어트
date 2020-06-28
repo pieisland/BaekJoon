@@ -1,0 +1,62 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <stdio.h>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+200628 일요일
+1484. 다이어트
+투 포인터 문제인데 일반적으로 푸는 투 포인터 문제와는 다르게
+마지막을 생각하는 게 필요했다.
+두 수 차이가 1인데 제곱해서 뺀 값이 구하는 값보다 크다면
+더 찾아도 나올 수가 없기 때문에 그 때 종료하는 것.
+*/
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int g;
+	cin >> g;
+
+	//s가 기억하는 몸무게이고 e가 현재 몸무게입니다.
+	int s = 1, e = 1;
+	bool check = false;
+	while (1) {
+		int val = e * e - s * s;
+		if (s + 1 == e && val > g)
+			break;
+			
+		/*if (val >= g) s++;
+		else e++;
+		if (val == g) {
+			cout << e << '\n';
+			check = true;
+		}*/
+
+		if (val == g) {
+			cout << e << '\n';
+			s++;
+			check = true;
+			//이렇게 출력하고나서 변화가 있어야되는건데..
+		}
+		else if (val > g) {
+			s++;
+		}
+		else if (val < g) {
+			e++;
+		}
+
+		//
+	}
+	if (check == false)
+		cout << -1 << '\n';
+
+	return 0;
+}
