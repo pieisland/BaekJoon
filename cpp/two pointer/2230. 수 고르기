@@ -1,0 +1,62 @@
+#include <string>
+#include <vector>
+#include <iostream>
+#include <stdio.h>
+#include <queue>
+#include <algorithm>
+#include <cstring>
+
+using namespace std;
+
+/*
+200628 일요일
+2230. 수 고르기
+이해가 안되는 건..
+vector로 하니까 런타임에러가 났다는 거..
+(사실 vector 때문인지 saveVal 값을 지역변수로 선언했어서 그런건지
+잘은 모르겠음.
+채점 서버에서는 런타임 에러나는데
+내가 할 떄는 안 그러는데.. 뭔 상황임)
+그래서 배열 최대 크기로 해두고
+정렬할 때 arr, arr+n 으로 하는 방법을 익혀야 되겠다는 점.
+..그렇다.
+*/
+
+int arr[100000];
+int saveVal = 2000000001;
+vector<int> vec;
+
+int main() {
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+
+	int n, m;
+	cin >> n >> m;
+	vec.resize(n);
+	for (int i = 0; i < n; i++)
+		cin >>arr[i];
+
+	//정렬이 중요.
+	sort(arr, arr + n);
+
+	int s = 0, e = 0;
+
+	while (1) {
+		if (e > n - 1) break;
+
+		int diff = arr[e] - arr[s];
+
+		if (diff >= m) {
+			s++;
+			if (diff < saveVal)
+				saveVal = diff;
+		}
+		else
+			e++;
+	}
+
+	cout << saveVal << '\n';
+
+	return 0;
+}
