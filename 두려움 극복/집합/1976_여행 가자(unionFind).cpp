@@ -23,7 +23,7 @@ void unionSet(int a, int b) {
 	b = findParent(b);
 
 	//크기를 비교하지 않는 이유는
-	//저기서 중복을 막아서인가?
+	//for문에서 이미 부모가 작은 값부터 확인해서 설정했기 때문이 아닐까 싶다.
 	parent[b] = a;
 }
 
@@ -52,7 +52,7 @@ int main(void){
 	cin >> firstCity;
 	firstCity = findParent(firstCity);
 	
-	//같은 부모를 가지면 같은 집합에 속한 거라 갈 수 있는 길이 있다.
+	//나머지 여행지가 첫 여행지와 같은 부모를 가지면 같은 집합에 속한 거라 갈 수 있는 길이 있다.
 	string answer = "YES";
 	for (int i = 1; i < m; i++) {
 		int x;
