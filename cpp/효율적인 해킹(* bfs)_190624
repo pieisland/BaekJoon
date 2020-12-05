@@ -19,7 +19,6 @@ using namespace std;
 int n, m;
 vector<int> arr[10001];
 int check[10001];
-vector<int> answer;
 int save[10001];
 int maxnum;
 int size_;
@@ -56,7 +55,6 @@ void bfs(int num) {
 		size_ = 0;
 		maxnum = cnt;
 		save[size_++] = num;
-		//answer.push_back(num);
 	}
 	else if (maxnum == cnt)
 		save[size_++] = num;
@@ -78,8 +76,6 @@ int main(){
 	{
 		bfs(i);
 	}
-
-	sort(answer.begin(), answer.end());
 
 	for (int i = 0; i < size_; i++)
 		cout << save[i] << " ";
