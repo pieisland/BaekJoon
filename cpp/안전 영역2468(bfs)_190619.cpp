@@ -10,7 +10,6 @@ using namespace std;
 /*
 19.06.19.수.
 bfs를 여러 번 돌려야 되는 문제.
-
 */
 
 int arr[100][100];
@@ -45,13 +44,15 @@ void bfs(int y, int x)
 	queue<pair<int, int>> q;
 	q.push(pair<int, int>(y, x));
 
+	c[y][x] = 1;
+
+
 	while (!q.empty())
 	{
 		int cy, cx;
 		cy = q.front().first;
 		cx = q.front().second;
 		q.pop();
-		c[cy][cx] = 1;
 
 		for (int i = 0; i < 4; i++)
 		{
@@ -62,7 +63,7 @@ void bfs(int y, int x)
 			if (isInside(ny, nx) && temp[ny][nx] != 0 && c[ny][nx] == 0)
 			{
 				q.push(pair<int, int>(ny, nx));
-				c[ny][nx] = 1;//근데 저 위에서도 하는데 여기서도 해야됨..??
+				c[ny][nx] = 1;
 			}
 		}
 	}
