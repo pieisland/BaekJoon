@@ -38,6 +38,7 @@ int main()
 			last_idx = i;//새로 붙여야 될 때, 테이프의 시작 위치를 변경.
 			//cout << last_idx << endl;
 		}
+		//새로 안 붙여도 되는 경우는 이미 붙인 스티커로 감싸진 경우
 	}
 	
 	cout << ans;
