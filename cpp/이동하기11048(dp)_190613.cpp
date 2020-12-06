@@ -30,6 +30,7 @@ int main(void)
 	{
 		for (int j = 1; j <= m; j++)
 		{
+			//사실 dp[i-1][j-1]은 나머지 두 개보다 작을 수 밖에 없어서 고려하지 않아도 된다. 사탕이 양수이기 때문.
 			dp[i][j] = max(dp[i - 1][j], max(dp[i][j - 1], dp[i - 1][j - 1]));
 			dp[i][j] += arr[i][j];
 		}
