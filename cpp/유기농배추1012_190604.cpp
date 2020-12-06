@@ -13,6 +13,8 @@ using namespace std;
 초기화 안해서 2번이나 틀림.. ^.^
 */
 
+//일반적으로 bfs로 푸는데 이 때는 dfs로 풀었었네.
+
 int m, n;
 int check[50][50];
 int land[50][50];
