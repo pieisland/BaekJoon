@@ -18,6 +18,8 @@ using namespace std;
 자본금보다 많이 줬으면 낮춘다.
 */
 
+//값을 high라고 할 게 아니라 다 합한 값이 총 예산보다 적거나 같을 때 result에 mid 값을 저장해주면 된다.
+
 int n, k;
 vector<int> mon;
 
