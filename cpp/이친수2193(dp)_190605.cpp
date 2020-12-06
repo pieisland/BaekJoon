@@ -20,8 +20,8 @@ int main()
 {	
 	int n;
 	cin >> n;
-	arr[0] = 1;
-	arr[1] = 1;
+	arr[0] = 1; //1
+	arr[1] = 1; //10
 
 	for (int i = 2; i < n; i++)
 	{
