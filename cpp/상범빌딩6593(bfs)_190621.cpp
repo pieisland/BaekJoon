@@ -43,8 +43,6 @@ void bfs(int a, int b, int c)
 			return;
 		}
 
-		//cout << "뀨뀨뀨" << z<<y<<x<<endl;
-
 		for (int i = 0; i < 6; i++)
 		{
 			int nz, ny, nx;
