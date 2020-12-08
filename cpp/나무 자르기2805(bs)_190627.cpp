@@ -24,15 +24,20 @@ long long int slice(int h)
 
 int BSearch(int target, int low, int high) {
 	
+	int ret;
 	//자른 길이가 target보다 크다면, 더 많이 잘린거죠
 	while (low <= high) {
 		int mid = (low + high) / 2;
 		if (slice(mid) >= target)//그러면 높이를 올려서 덜 잘라보자.
+		{	
 			low = mid + 1;
+			ret = mid;
+		}
 		else
 			high = mid - 1;
 	}
-	return high;
+	//return high;
+	return ret;
 }
 
 int main(){
