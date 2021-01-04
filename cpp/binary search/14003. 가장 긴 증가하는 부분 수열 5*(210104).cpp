@@ -62,13 +62,13 @@ int main() {
 			int left = 0;
 			int right = v.size() - 1;
 			
-      //이게 lower bound를 찾는 부분. left나 right나 어차피 동일한 값이 되어서 마지막에 뭘 하든 상관은 없는 듯 함.
-      while (left < right) {
+			//이게 lower bound를 찾는 부분. left나 right나 어차피 동일한 값이 되어서 마지막에 뭘 하든 상관은 없는 듯 함.
+			while (left < right) {
 				int mid = (left + right) / 2;
 				if (v[mid] >= arr[i]) right = mid;
-				else left = mid + 1;//얘는 왜 mid+1임..?
+				else left = mid + 1;
 			}
-			v[right] = arr[i];//그리고 왜 left에 주는데?
+			v[right] = arr[i];
 			indexarr[i] = right;
 		}
 	}
